@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sagnik's Website</title>
+    <title>Sagnik's Space</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -344,7 +344,10 @@
                         const [x, y] = projection(d.coordinates) || [null, null];
                         if (x === null) return 'scale(0)';
                         const scale = currentMap === 'world' ? 0.8 : 1.2;
-                        return `translate(${x - (12 * scale / 2)}, ${y - (12 * scale / 2)}) scale(${scale})`;
+                        // Corrected logic to anchor the pin's tip to the coordinate
+                        const anchorX = 12; // The horizontal center of the 24px icon
+                        const anchorY = 22; // The vertical tip of the 24px icon
+                        return `translate(${x - (anchorX * scale)}, ${y - (anchorY * scale)}) scale(${scale})`;
                     })
                     .style("fill", colors.milestone)
                     .on("mouseover", function(event, d) {
