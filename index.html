@@ -25,8 +25,9 @@
             stroke-width: 0.5px;
             transition: fill 0.3s;
         }
-        .city-dot {
-            transition: fill 0.3s, r 0.3s;
+        .city-dot, .milestone-marker {
+            transition: fill 0.3s, transform 0.3s, r 0.3s;
+            cursor: pointer;
         }
 
         #tooltip {
@@ -48,6 +49,14 @@
         }
         .map-control-btn {
              transition: background-color 0.3s, color 0.3s;
+        }
+        /* Custom styles for the segmented control to override some defaults */
+        .segmented-control .map-control-btn.active {
+            border-color: #FF2800;
+            z-index: 10;
+        }
+         .segmented-control .map-control-btn:not(.active):hover {
+            background-color: #f3f4f6; /* gray-100 */
         }
     </style>
 </head>
@@ -91,16 +100,16 @@
             <a href="https://www.linkedin.com/in/sagnik10/" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                 LinkedIn
             </a>
-            <a href="https://github.com/isagnik" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+            <a href="https://github.com/isagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                 GitHub
             </a>
-            <a href="https://www.instagram.com/sagnik.cc/" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+            <a href="https://www.instagram.com/sagnik.cc/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                 Instagram
             </a>
-            <a href="https://www.chess.com/member/isagnik10" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+            <a href="https://www.chess.com/member/isagnik10" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                 Chess.com
             </a>
-            <a href="https://beliapp.co/app/sagnik" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+            <a href="https://beliapp.co/app/sagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                 Beli
             </a>
         </div>
@@ -122,12 +131,24 @@
             <p class="text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
             
             <!-- Map Controls -->
-            <div id="map-controls" class="flex justify-center gap-2 sm:gap-4 mb-4 flex-wrap">
+            <div id="map-controls" class="flex justify-center items-center gap-2 sm:gap-4 mb-4 flex-wrap">
                 <button id="show-world" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">World</button>
                 <button id="show-europe" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">Europe</button>
                 <button id="show-usa" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">USA</button>
                 <button id="show-india" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">India</button>
-                <button id="show-cities" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">Cities</button>
+                
+                <!-- Cities Filter Group -->
+                <div class="flex items-center gap-2">
+                    <span class="text-base font-medium text-gray-700">Cities:</span>
+                    <div class="flex rounded-md shadow-sm segmented-control" role="group">
+                        <button id="show-visited-cities" type="button" class="map-control-btn px-4 py-2 text-sm font-medium bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100">
+                            Visited
+                        </button>
+                        <button id="show-lived-in-cities" type="button" class="map-control-btn px-4 py-2 text-sm font-medium bg-white border-t border-b border-r border-gray-200 rounded-r-md hover:bg-gray-100">
+                            Lived In
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div id="map-container" class="w-full" style="max-width: 960px;">
@@ -144,13 +165,28 @@
     <script>
         // --- Interactive Map Script ---
         let currentMap = 'world'; // To track the active map
-        let showCities = false; // To track if cities should be shown
+        let showVisitedCities = false; 
+        let showLivedInCities = false;
         let mapDataCache = {}; // Cache for fetched map data
 
         const visitedCountries = new Set(["India", "Libya", "United Kingdom", "Oman", "United Arab Emirates", "United States of America", "Nepal", "Turkey", "Taiwan", "France", "Belgium", "Netherlands", "Italy", "Vatican", "Spain", "Portugal", "South Korea", "Singapore", "Qatar", "Hong Kong"]);
         const visitedStates = new Set(["Virginia", "North Carolina", "Florida", "South Carolina", "Alabama", "Georgia", "Texas", "Colorado", "New Mexico", "Arizona", "Nevada", "California", "New York", "Illinois", "Maryland", "Delaware", "Pennsylvania", "New Jersey", "Connecticut", "Rhode Island", "Massachusetts", "Montana", "Wyoming", "Hawaii", "Kentucky", "Ohio", "Indiana", "Puerto Rico", "District of Columbia"]);
         const visitedIndianStates = new Set(["Jammu and Kashmir", "Uttar Pradesh", "West Bengal", "Jharkhand", "Odisha", "Assam", "Mizoram", "Tripura", "Karnataka", "Maharashtra", "Goa", "Kerala", "Rajasthan", "Haryana", "Tamil Nadu", "Delhi", "Puducherry"]);
+        
+        const livedInCitiesData = [
+            { name: "Kolkata", coordinates: [88.3639, 22.5726] },
+            { name: "Jodhpur", coordinates: [73.0243, 26.2389] },
+            { name: "New Delhi", coordinates: [77.2090, 28.6139] },
+            { name: "Bengaluru", coordinates: [77.5946, 12.9716] },
+            { name: "Sirt", coordinates: [16.5885, 31.2061] },
+            { name: "London", coordinates: [-0.1278, 51.5074] },
+            { name: "Muscat", coordinates: [58.3829, 23.5859] },
+            { name: "Raleigh", coordinates: [-78.6382, 35.7796] },
+            { name: "San Francisco", coordinates: [-122.4194, 37.7749] },
+        ];
+        
         const visitedCitiesData = [
+            // Note: Lived-in cities can also be in the visited list.
             { name: "New York City", coordinates: [-74.0060, 40.7128] },
             { name: "San Francisco", coordinates: [-122.4194, 37.7749] },
             { name: "Kolkata", coordinates: [88.3639, 22.5726] },
@@ -254,14 +290,26 @@
             const europeBtn = document.getElementById('show-europe');
             const usaBtn = document.getElementById('show-usa');
             const indiaBtn = document.getElementById('show-india');
-            const citiesBtn = document.getElementById('show-cities');
+            const visitedCitiesBtn = document.getElementById('show-visited-cities');
+            const livedInCitiesBtn = document.getElementById('show-lived-in-cities');
 
             worldBtn.addEventListener('click', () => { currentMap = 'world'; redrawCurrentMap(); });
             europeBtn.addEventListener('click', () => { currentMap = 'europe'; redrawCurrentMap(); });
             usaBtn.addEventListener('click', () => { currentMap = 'usa'; redrawCurrentMap(); });
             indiaBtn.addEventListener('click', () => { currentMap = 'india'; redrawCurrentMap(); });
-            citiesBtn.addEventListener('click', () => { 
-                showCities = !showCities; 
+            
+            visitedCitiesBtn.addEventListener('click', () => { 
+                showVisitedCities = !showVisitedCities;
+                if (showVisitedCities) {
+                    showLivedInCities = false;
+                }
+                redrawCurrentMap();
+            });
+            livedInCitiesBtn.addEventListener('click', () => { 
+                showLivedInCities = !showLivedInCities;
+                if (showLivedInCities) {
+                    showVisitedCities = false;
+                }
                 redrawCurrentMap();
             });
 
@@ -278,20 +326,17 @@
             else if (currentMap === 'india') drawIndiaMap();
             
             // Update active button style for maps
-            document.querySelectorAll('.map-control-btn').forEach(btn => {
-                if (btn.id !== 'show-cities') {
-                    btn.classList.remove('active');
+            document.querySelectorAll('#map-controls .map-control-btn').forEach(btn => {
+                const btnId = btn.id;
+                if (btnId.startsWith('show-') && !btnId.includes('cities')) {
+                     btn.classList.remove('active');
                 }
             });
             document.getElementById(`show-${currentMap}`).classList.add('active');
 
-            // Update active button style for cities toggle
-            const citiesBtn = document.getElementById('show-cities');
-            if (showCities) {
-                citiesBtn.classList.add('active');
-            } else {
-                citiesBtn.classList.remove('active');
-            }
+            // Update active state for city toggles
+            document.getElementById('show-visited-cities').classList.toggle('active', showVisitedCities);
+            document.getElementById('show-lived-in-cities').classList.toggle('active', showLivedInCities);
         }
 
         function getMapColors() {
@@ -301,13 +346,16 @@
                 hover: '#9ca3af',
                 visitedHover: '#E52500',
                 city: '#3b82f6',
-                cityHover: '#1d4ed8'
+                cityHover: '#1d4ed8',
+                livedIn: '#a855f7', // purple-500
+                livedInHover: '#9333ea' // purple-600
             };
         }
         
-        function drawCities(projection, baseRadius = 3.5) {
+        function drawVisitedCities(projection, baseRadius = 3.5) {
             const colors = getMapColors();
              svg.append("g")
+                .attr('class', 'visited-cities-layer')
                 .selectAll("circle")
                 .data(visitedCitiesData)
                 .enter()
@@ -315,7 +363,7 @@
                 .attr("class", "city-dot")
                 .attr("cx", d => projection(d.coordinates) ? projection(d.coordinates)[0] : null)
                 .attr("cy", d => projection(d.coordinates) ? projection(d.coordinates)[1] : null)
-                .attr("r", d => projection(d.coordinates) ? baseRadius : 0) // Use baseRadius
+                .attr("r", d => projection(d.coordinates) ? baseRadius : 0)
                 .style("fill", colors.city)
                 .on("mouseover", function(event, d) {
                     showTooltip(event, d.name);
@@ -326,108 +374,98 @@
                     d3.select(this).style("fill", colors.city).attr("r", baseRadius);
                 });
         }
+        
+        function drawLivedInCities(projection, scale = 1.2) {
+            const colors = getMapColors();
+            // A path for a diamond, representing a milestone
+            const milestonePath = "M0,-8 L8,0 L0,8 L-8,0 Z";
+            
+            svg.append("g")
+               .attr('class', 'lived-in-cities-layer')
+               .selectAll("path")
+               .data(livedInCitiesData)
+               .enter()
+               .append("path")
+               .attr("class", "milestone-marker")
+               .attr("d", milestonePath)
+               .attr("transform", d => {
+                   const coords = projection(d.coordinates);
+                   return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale})` : "scale(0)";
+               })
+               .style("fill", colors.livedIn)
+               .on("mouseover", function(event, d) {
+                    showTooltip(event, d.name);
+                    d3.select(this).style("fill", colors.livedInHover).attr("transform", d => {
+                        const coords = projection(d.coordinates);
+                        return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale * 1.2})` : "scale(0)";
+                    });
+                })
+                .on("mouseout", function(event, d) {
+                    hideTooltip();
+                    d3.select(this).style("fill", colors.livedIn).attr("transform", d => {
+                        const coords = projection(d.coordinates);
+                        return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale})` : "scale(0)";
+                    });
+                });
+        }
+
+        function drawMapBase(geography, pathGenerator, visitedSet, nameKey) {
+             const colors = getMapColors();
+             svg.append("g").selectAll("path").data(geography.features).enter().append("path")
+                .attr("d", pathGenerator).attr("class", "country")
+                .attr("fill", d => visitedSet.has(d.properties[nameKey]) ? colors.visited : colors.default)
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, d.properties[nameKey]);
+                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameKey]) ? colors.visitedHover : colors.hover);
+                })
+                .on("mouseout", function(event, d) {
+                    hideTooltip();
+                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameKey]) ? colors.visited : colors.default);
+                });
+        }
 
         function drawWorldMap() {
             const { worldData } = mapDataCache;
             if (!worldData) return;
-
             svg.selectAll("*").remove();
-            const colors = getMapColors();
             const projection = d3.geoMercator().scale(150).center([0, 40]).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            const countries = topojson.feature(worldData, worldData.objects.countries);
-
-            svg.selectAll("path").data(countries.features).enter().append("path")
-                .attr("d", path).attr("class", "country")
-                .attr("fill", d => visitedCountries.has(d.properties.name) ? colors.visited : colors.default)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties.name);
-                    d3.select(this).attr("fill", visitedCountries.has(d.properties.name) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedCountries.has(d.properties.name) ? colors.visited : colors.default);
-                });
-            
-            if (showCities) drawCities(projection); // Uses default radius
+            drawMapBase(topojson.feature(worldData, worldData.objects.countries), path, visitedCountries, 'name');
+            if (showVisitedCities) drawVisitedCities(projection, 3.5);
+            if (showLivedInCities) drawLivedInCities(projection, 0.8);
         }
         
         function drawEuropeMap() {
             const { worldData } = mapDataCache;
             if (!worldData) return;
-
             svg.selectAll("*").remove();
-            const colors = getMapColors();
-            const projection = d3.geoMercator()
-                .center([ 20, 52 ]) // Center on Europe
-                .scale(550) // Zoom in
-                .translate([ 480, 300 ]);
+            const projection = d3.geoMercator().center([20, 52]).scale(550).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            const countries = topojson.feature(worldData, worldData.objects.countries);
-
-            svg.selectAll("path").data(countries.features).enter().append("path")
-                .attr("d", path).attr("class", "country")
-                .attr("fill", d => visitedCountries.has(d.properties.name) ? colors.visited : colors.default)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties.name);
-                    d3.select(this).attr("fill", visitedCountries.has(d.properties.name) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedCountries.has(d.properties.name) ? colors.visited : colors.default);
-                });
-            
-            if (showCities) drawCities(projection, 4); // Slightly larger radius for Europe map
+            drawMapBase(topojson.feature(worldData, worldData.objects.countries), path, visitedCountries, 'name');
+            if (showVisitedCities) drawVisitedCities(projection, 4);
+            if (showLivedInCities) drawLivedInCities(projection);
         }
 
         function drawUsaMap() {
             const { usData } = mapDataCache;
             if (!usData) return;
-
             svg.selectAll("*").remove();
-            const colors = getMapColors();
             const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1200);
             const path = d3.geoPath().projection(projection);
-            const states = topojson.feature(usData, usData.objects.states);
-            
-            svg.append("g").selectAll("path").data(states.features).join("path")
-                .attr("d", path).attr("class", "state")
-                .attr("fill", d => visitedStates.has(d.properties.name) ? colors.visited : colors.default)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties.name);
-                    d3.select(this).attr("fill", visitedStates.has(d.properties.name) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedStates.has(d.properties.name) ? colors.visited : colors.default);
-                });
-            
-            if (showCities) drawCities(projection, 5); // Larger radius for USA map
+            drawMapBase(topojson.feature(usData, usData.objects.states), path, visitedStates, 'name');
+            if (showVisitedCities) drawVisitedCities(projection, 5);
+            if (showLivedInCities) drawLivedInCities(projection);
         }
             
         function drawIndiaMap() {
             const { indiaData } = mapDataCache;
             if (!indiaData) return;
-            
             svg.selectAll("*").remove();
-            const colors = getMapColors();
             const projection = d3.geoMercator().center([82.8, 23.5]).scale(1000).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            const states = topojson.feature(indiaData, indiaData.objects.states);
-
-            svg.append("g").selectAll("path").data(states.features).join("path")
-                .attr("d", path).attr("class", "india-state")
-                .attr("fill", d => visitedIndianStates.has(d.properties.st_nm) ? colors.visited : colors.default)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties.st_nm);
-                    d3.select(this).attr("fill", visitedIndianStates.has(d.properties.st_nm) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedIndianStates.has(d.properties.st_nm) ? colors.visited : colors.default);
-                });
-
-            if (showCities) drawCities(projection, 5); // Larger radius for India map
+            drawMapBase(topojson.feature(indiaData, indiaData.objects.states), path, visitedIndianStates, 'st_nm');
+            if (showVisitedCities) drawVisitedCities(projection, 5);
+            if (showLivedInCities) drawLivedInCities(projection);
         }
 
         function showTooltip(event, name) {
