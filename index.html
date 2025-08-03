@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sagnik's Space</title>
+    <title>Sagnik's Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,20 +14,20 @@
         }
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
         }
         .font-cursive {
             font-family: 'Dancing Script', cursive;
         }
-        /* Map stroke color */
         .country, .state, .india-state {
             stroke: white;
             stroke-width: 0.5px;
             transition: fill 0.3s;
         }
-        .city-dot, .milestone-marker {
-            transition: fill 0.3s, transform 0.3s, r 0.3s;
-            cursor: pointer;
+        .city-dot {
+            transition: fill 0.3s, r 0.3s;
+        }
+        .milestone-icon, .city-dot {
+            transition: fill 0.3s, transform 0.3s;
         }
 
         #tooltip {
@@ -47,74 +47,109 @@
             color: white;
             font-weight: bold;
         }
-        .map-control-btn {
+        .map-control-btn, .city-filter-btn {
              transition: background-color 0.3s, color 0.3s;
         }
-        /* Custom styles for the segmented control to override some defaults */
-        .segmented-control .map-control-btn.active {
-            border-color: #FF2800;
-            z-index: 10;
+        .city-filter-btn.active {
+            background-color: #FF2800; /* Changed from blue to red */
+            color: white;
+            font-weight: bold;
         }
-         .segmented-control .map-control-btn:not(.active):hover {
-            background-color: #f3f4f6; /* gray-100 */
+
+        /* Rotating Text Animation */
+        .rotating-text-container {
+            display: inline-block;
+            position: relative;
+            height: 1.5em; /* Adjust based on font size */
+            width: 9em; /* Adjust to fit the longest text */
+            text-align: right;
+            vertical-align: bottom;
+            overflow: hidden;
+        }
+        .rotating-text-item {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(100%); /* Start below */
+            animation: rotate-text 8s linear infinite; /* Faster animation */
+        }
+        .rotating-text-item:nth-child(1) { animation-delay: 0s; }
+        .rotating-text-item:nth-child(2) { animation-delay: 2s; } /* 8s / 4 items = 2s delay each */
+        .rotating-text-item:nth-child(3) { animation-delay: 4s; }
+        .rotating-text-item:nth-child(4) { animation-delay: 6s; }
+
+        @keyframes rotate-text {
+            0% {
+                transform: translateY(100%); /* Start below */
+                opacity: 0;
+            }
+            5%, 20% {
+                transform: translateY(0); /* Move into view */
+                opacity: 1;
+            }
+            25%, 100% {
+                transform: translateY(-100%); /* Move up and out */
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body class="bg-gray-50 text-black">
 
-    <!-- Dropdown Menu -->
-    <div class="absolute top-6 right-16 z-10">
+    <!-- Navigation -->
+    <div class="absolute top-6 right-16 z-10 flex items-center gap-8">
+        <!-- Projects Dropdown -->
         <div class="relative group pb-4">
-            <button type="button" class="text-lg font-medium text-gray-800 focus:outline-none pb-1" id="options-menu" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="text-lg font-medium text-gray-800 focus:outline-none pb-1" aria-haspopup="true" aria-expanded="false">
                 Projects
                 <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full group-focus-within:w-full"></span>
             </button>
-            <!-- Dropdown content -->
-            <div id="dropdown-content" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 scale-95 transform transition-all duration-200 ease-in-out pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
-                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 scale-95 transform transition-all duration-200 ease-in-out pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+                <div class="py-1" role="menu" aria-orientation="vertical">
                     <a href="https://pokertracker-dea19.web.app/" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center" role="menuitem">PokerTracker</a>
-                </div>
-                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     <a href="https://github.com/isagnik10/personal-website/" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center" role="menuitem">Personal website</a>
                 </div>
             </div>
         </div>
+        <!-- Contact Link -->
+        <a href="#contact" class="text-lg font-medium text-gray-800 focus:outline-none relative group pb-4">
+            Contact
+            <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full"></span>
+        </a>
     </div>
 
     <!-- Main Content -->
     <div class="relative flex flex-col items-center justify-center min-h-screen text-center py-12 px-4">
-        <!-- Heading -->
         <div class="mb-4">
             <h1 class="text-6xl md:text-7xl font-bold whitespace-nowrap">
                 <span class="font-cursive italic font-bold text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
             </h1>
-            <p class="text-xl md:text-2xl text-gray-600 mt-2">Exploring</p>
+            <p class="text-xl md:text-2xl text-gray-600 mt-2 flex items-center justify-center gap-1">
+                <span class="rotating-text-container">
+                    <span class="rotating-text-item">Thriving in</span>
+                    <span class="rotating-text-item">Surviving</span>
+                    <span class="rotating-text-item">Exploring</span>
+                    <span class="rotating-text-item">Tolerating</span>
+                </span>
+                <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                 San Francisco
+            </p>
         </div>
 
-        <!-- Divider -->
         <hr class="w-1/4 md:w-1/5 border-t border-[#FF2800] my-8">
 
-        <!-- Social Media Links -->
         <div class="flex flex-wrap justify-center gap-4">
-             <!-- Replace '#' with your actual social media links -->
-            <a href="https://www.linkedin.com/in/sagnik10/" target="_blank" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
-                LinkedIn
-            </a>
-            <a href="https://github.com/isagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
-                GitHub
-            </a>
-            <a href="https://www.instagram.com/sagnik.cc/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
-                Instagram
-            </a>
-            <a href="https://www.chess.com/member/isagnik10" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
-                Chess.com
-            </a>
-            <a href="https://beliapp.co/app/sagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
-                Beli
-            </a>
+            <a href="https://www.linkedin.com/in/sagnik10/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">LinkedIn</a>
+            <a href="https://github.com/isagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">GitHub</a>
+            <a href="https://www.instagram.com/sagnik.cc/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Instagram</a>
+            <a href="https://www.chess.com/member/isagnik10" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Chess.com</a>
+            <a href="https://beliapp.co/app/sagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Beli</a>
         </div>
 
-        <!-- Scroll Down Arrow -->
         <div class="absolute bottom-10">
             <a href="#travels" aria-label="Scroll to travels section">
                 <svg class="w-8 h-8 text-[#FF2800] animate-bounce" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,141 +165,100 @@
             <h2 class="text-4xl font-bold mb-4">Travels</h2>
             <p class="text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
             
-            <!-- Map Controls -->
-            <div id="map-controls" class="flex justify-center items-center gap-2 sm:gap-4 mb-4 flex-wrap">
+            <div id="map-controls" class="flex justify-center gap-2 sm:gap-4 mb-4 flex-wrap">
                 <button id="show-world" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">World</button>
                 <button id="show-europe" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">Europe</button>
                 <button id="show-usa" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">USA</button>
                 <button id="show-india" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">India</button>
-                
-                <!-- Cities Filter Group -->
-                <div class="flex items-center gap-2">
-                    <span class="text-base font-medium text-gray-700">Cities:</span>
-                    <div class="flex rounded-md shadow-sm segmented-control" role="group">
-                        <button id="show-visited-cities" type="button" class="map-control-btn px-4 py-2 text-sm font-medium bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100">
-                            Visited
-                        </button>
-                        <button id="show-lived-in-cities" type="button" class="map-control-btn px-4 py-2 text-sm font-medium bg-white border-t border-b border-r border-gray-200 rounded-r-md hover:bg-gray-100">
-                            Lived In
-                        </button>
-                    </div>
+            </div>
+            
+            <div id="city-controls" class="flex items-center justify-center gap-4 mb-4">
+                <span class="text-lg font-medium text-gray-700">Cities:</span>
+                <div class="flex rounded-md shadow-sm">
+                    <button id="show-visited-cities" class="city-filter-btn px-4 py-2 bg-gray-200 rounded-l-md">Visited</button>
+                    <button id="show-lived-cities" class="city-filter-btn px-4 py-2 bg-gray-200 rounded-r-md border-l border-gray-300">Lived In</button>
                 </div>
             </div>
 
-            <div id="map-container" class="w-full" style="max-width: 960px;">
-                <!-- Interactive map will be rendered here -->
-            </div>
+            <div id="map-container" class="w-full" style="max-width: 960px;"></div>
             <div id="tooltip"></div>
         </div>
     </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="w-full py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4">Contact</h2>
+            <p class="text-gray-600 text-lg group inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <a href="mailto:isagnik10@gmail.com" class="relative">
+                    isagnik10@gmail.com
+                    <span class="absolute bottom-[-2px] left-0 w-full h-0.5 bg-[#FF2800] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+            </p>
+        </div>
+    </section>
+
 
     <!-- D3 and TopoJSON scripts -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/topojson.v3.min.js"></script>
 
     <script>
-        // --- Interactive Map Script ---
-        let currentMap = 'world'; // To track the active map
-        let showVisitedCities = false; 
-        let showLivedInCities = false;
-        let mapDataCache = {}; // Cache for fetched map data
+        let currentMap = 'world';
+        let cityFilter = 'none'; // 'visited', 'lived', 'none'
+        let mapDataCache = {};
 
         const visitedCountries = new Set(["India", "Libya", "United Kingdom", "Oman", "United Arab Emirates", "United States of America", "Nepal", "Turkey", "Taiwan", "France", "Belgium", "Netherlands", "Italy", "Vatican", "Spain", "Portugal", "South Korea", "Singapore", "Qatar", "Hong Kong"]);
         const visitedStates = new Set(["Virginia", "North Carolina", "Florida", "South Carolina", "Alabama", "Georgia", "Texas", "Colorado", "New Mexico", "Arizona", "Nevada", "California", "New York", "Illinois", "Maryland", "Delaware", "Pennsylvania", "New Jersey", "Connecticut", "Rhode Island", "Massachusetts", "Montana", "Wyoming", "Hawaii", "Kentucky", "Ohio", "Indiana", "Puerto Rico", "District of Columbia"]);
         const visitedIndianStates = new Set(["Jammu and Kashmir", "Uttar Pradesh", "West Bengal", "Jharkhand", "Odisha", "Assam", "Mizoram", "Tripura", "Karnataka", "Maharashtra", "Goa", "Kerala", "Rajasthan", "Haryana", "Tamil Nadu", "Delhi", "Puducherry"]);
         
-        const livedInCitiesData = [
-            { name: "Kolkata", coordinates: [88.3639, 22.5726] },
-            { name: "Jodhpur", coordinates: [73.0243, 26.2389] },
-            { name: "New Delhi", coordinates: [77.2090, 28.6139] },
-            { name: "Bengaluru", coordinates: [77.5946, 12.9716] },
-            { name: "Sirt", coordinates: [16.5885, 31.2061] },
-            { name: "London", coordinates: [-0.1278, 51.5074] },
-            { name: "Muscat", coordinates: [58.3829, 23.5859] },
-            { name: "Raleigh", coordinates: [-78.6382, 35.7796] },
-            { name: "San Francisco", coordinates: [-122.4194, 37.7749] },
+        const citiesLived = [
+            { name: "Kolkata", coordinates: [88.3639, 22.5726] }, { name: "Jodhpur", coordinates: [73.0243, 26.2389] },
+            { name: "New Delhi", coordinates: [77.2090, 28.6139] }, { name: "Bangalore", coordinates: [77.5946, 12.9716] },
+            { name: "Sirt", coordinates: [16.5887, 31.2089] }, { name: "London", coordinates: [-0.1278, 51.5074] },
+            { name: "Muscat", coordinates: [58.3829, 23.5859] }, { name: "Raleigh", coordinates: [-78.6382, 35.7796] },
+            { name: "San Francisco", coordinates: [-122.4194, 37.7749] }
         ];
-        
-        const visitedCitiesData = [
-            // Note: Lived-in cities can also be in the visited list.
-            { name: "New York City", coordinates: [-74.0060, 40.7128] },
-            { name: "San Francisco", coordinates: [-122.4194, 37.7749] },
-            { name: "Kolkata", coordinates: [88.3639, 22.5726] },
-            { name: "London", coordinates: [-0.1278, 51.5074] },
-            { name: "Macau", coordinates: [113.5439, 22.1987] },
-            { name: "Singapore", coordinates: [103.8198, 1.3521] },
-            { name: "Tripoli", coordinates: [13.1913, 32.8872] },
-            { name: "Paris", coordinates: [2.3522, 48.8566] },
-            { name: "Brussels", coordinates: [4.3517, 50.8503] },
-            { name: "Amsterdam", coordinates: [4.9041, 52.3676] },
-            { name: "Rome", coordinates: [12.4964, 41.9028] },
-            { name: "San Diego", coordinates: [-117.1611, 32.7157] },
-            { name: "Denver", coordinates: [-104.9903, 39.7392] },
-            { name: "Boulder", coordinates: [-105.2705, 40.0150] },
-            { name: "Raleigh", coordinates: [-78.6382, 35.7796] },
-            { name: "Charlotte", coordinates: [-80.8431, 35.2271] },
-            { name: "Sirt", coordinates: [16.5885, 31.2061] },
-            { name: "New Delhi", coordinates: [77.2090, 28.6139] },
-            { name: "Bengaluru", coordinates: [77.5946, 12.9716] },
-            { name: "Mumbai", coordinates: [72.8777, 19.0760] },
-            { name: "Zaanse Schans", coordinates: [4.8183, 52.4744] },
-            { name: "Los Angeles", coordinates: [-118.2437, 34.0522] },
-            { name: "Chicago", coordinates: [-87.6298, 41.8781] },
-            { name: "Miami", coordinates: [-80.1918, 25.7617] },
-            { name: "Austin", coordinates: [-97.7431, 30.2672] },
-            { name: "Houston", coordinates: [-95.3698, 29.7604] },
-            { name: "Muscat", coordinates: [58.3829, 23.5859] },
-            { name: "Dubai", coordinates: [55.2708, 25.2048] },
-            { name: "Venice", coordinates: [12.3155, 45.4408] },
-            { name: "Seoul", coordinates: [126.9780, 37.5665] },
-            { name: "Hong Kong", coordinates: [114.1694, 22.3193] },
-            { name: "Orlando", coordinates: [-81.3792, 28.5383] },
-            { name: "Taipei", coordinates: [121.5654, 25.0330] },
-            { name: "Istanbul", coordinates: [28.9784, 41.0082] },
-            { name: "Cappadocia", coordinates: [34.8255, 38.6431] },
-            { name: "Baltimore", coordinates: [-76.6122, 39.2904] },
-            { name: "Santa Fe", coordinates: [-105.9378, 35.6870] },
-            { name: "Indianapolis", coordinates: [-86.1581, 39.7684] },
-            { name: "Cincinnati", coordinates: [-84.5120, 39.1031] },
-            { name: "Williamsburg", coordinates: [-84.1649, 36.7412] },
-            { name: "Philadelphia", coordinates: [-75.1652, 39.9526] },
-            { name: "Napa", coordinates: [-122.2855, 38.2975] },
-            { name: "Sacramento", coordinates: [-121.4944, 38.5816] },
-            { name: "Palm Springs", coordinates: [-116.5453, 33.8303] },
-            { name: "Las Vegas", coordinates: [-115.1398, 36.1699] },
-            { name: "Salalah", coordinates: [54.0924, 17.0293] },
-            { name: "Sevilla", coordinates: [-5.9845, 37.3891] },
-            { name: "Porto", coordinates: [-8.6291, 41.1579] },
-            { name: "Lisbon", coordinates: [-9.1393, 38.7223] },
-            { name: "Madrid", coordinates: [-3.7038, 40.4168] },
-            { name: "Barcelona", coordinates: [2.1686, 41.3874] },
-            { name: "Positano", coordinates: [14.4858, 40.6280] },
-            { name: "Naples", coordinates: [14.2681, 40.8518] },
-            { name: "West Yellowstone", coordinates: [-111.1053, 44.6622] },
-            { name: "Big Sky", coordinates: [-111.3033, 45.2663] },
-            { name: "Huntsville", coordinates: [-86.5861, 34.7304] },
-            { name: "Atlanta", coordinates: [-84.3880, 33.7490] },
-            { name: "Charleston", coordinates: [-79.9311, 32.7765] },
-            { name: "Myrtle Beach", coordinates: [-78.8867, 33.6891] },
-            { name: "New Haven", coordinates: [-72.9279, 41.3083] },
-            { name: "Phoenix", coordinates: [-112.0740, 33.4484] },
-            { name: "Maui", coordinates: [-156.3319, 20.7984] },
-            { name: "Boston", coordinates: [-71.0589, 42.3601] },
-            { name: "Colorado Springs", coordinates: [-104.8214, 38.8339] },
-            { name: "Providence", coordinates: [-71.4128, 41.8240] },
-            { name: "Kīlauea", coordinates: [-155.2833, 19.4167] },
-            { name: "Jammu", coordinates: [74.8723, 32.7266] },
-            { name: "Srinagar", coordinates: [74.7973, 34.0837] },
-            { name: "Jodhpur", coordinates: [73.0243, 26.2389] },
-            { name: "Goa", coordinates: [73.8278, 15.4909] },
-            { name: "Trivandrum", coordinates: [76.9366, 8.5241] },
-            { name: "Munnar", coordinates: [77.0595, 10.0889] },
-            { name: "Asansol", coordinates: [86.9661, 23.6739] },
-            { name: "Puri", coordinates: [85.8312, 19.8135] },
-            { name: "Jamshedpur", coordinates: [86.2029, 22.8046] },
-            { name: "Doha", coordinates: [51.5310, 25.2854] },
-            { name: "Kathmandu", coordinates: [85.3240, 27.7172] },
-            { name: "Pokhara", coordinates: [83.9856, 28.2096] }
+
+        const allVisitedCities = [
+            ...citiesLived,
+            { name: "New York City", coordinates: [-74.0060, 40.7128] }, { name: "Macau", coordinates: [113.5439, 22.1987] },
+            { name: "Singapore", coordinates: [103.8198, 1.3521] }, { name: "Tripoli", coordinates: [13.1913, 32.8872] },
+            { name: "Paris", coordinates: [2.3522, 48.8566] }, { name: "Brussels", coordinates: [4.3517, 50.8503] },
+            { name: "Amsterdam", coordinates: [4.9041, 52.3676] }, { name: "Rome", coordinates: [12.4964, 41.9028] },
+            { name: "San Diego", coordinates: [-117.1611, 32.7157] }, { name: "Denver", coordinates: [-104.9903, 39.7392] },
+            { name: "Boulder", coordinates: [-105.2705, 40.0150] }, { name: "Charlotte", coordinates: [-80.8431, 35.2271] },
+            { name: "Zaanse Schans", coordinates: [4.8181, 52.4736] }, { name: "Los Angeles", coordinates: [-118.2437, 34.0522] },
+            { name: "Chicago", coordinates: [-87.6298, 41.8781] }, { name: "Miami", coordinates: [-80.1918, 25.7617] },
+            { name: "Austin", coordinates: [-97.7431, 30.2672] }, { name: "Houston", coordinates: [-95.3698, 29.7604] },
+            { name: "Dubai", coordinates: [55.2708, 25.2048] }, { name: "Venice", coordinates: [12.3155, 45.4408] },
+            { name: "Seoul", coordinates: [126.9780, 37.5665] }, { name: "Hong Kong", coordinates: [114.1694, 22.3193] },
+            { name: "Orlando", coordinates: [-81.3792, 28.5383] }, { name: "Taipei", coordinates: [121.5654, 25.0330] },
+            { name: "Istanbul", coordinates: [28.9784, 41.0082] }, { name: "Cappadocia", coordinates: [34.8255, 38.6431] },
+            { name: "Baltimore", coordinates: [-76.6122, 39.2904] }, { name: "Santa Fe", coordinates: [-105.9378, 35.6870] },
+            { name: "Indianapolis", coordinates: [-86.1581, 39.7684] }, { name: "Cincinnati", coordinates: [-84.5120, 39.1031] },
+            { name: "Williamsburg", coordinates: [-76.7075, 37.2707] }, { name: "Philadelphia", coordinates: [-75.1652, 39.9526] },
+            { name: "Napa", coordinates: [-122.2855, 38.2975] }, { name: "Sacramento", coordinates: [-121.4944, 38.5816] },
+            { name: "Palm Springs", coordinates: [-116.5453, 33.8303] }, { name: "Las Vegas", coordinates: [-115.1398, 36.1699] },
+            { name: "Salalah", coordinates: [54.0924, 17.0293] }, { name: "Seville", coordinates: [-5.9845, 37.3891] },
+            { name: "Porto", coordinates: [-8.6291, 41.1579] }, { name: "Lisbon", coordinates: [-9.1393, 38.7223] },
+            { name: "Madrid", coordinates: [-3.7038, 40.4168] }, { name: "Barcelona", coordinates: [2.1686, 41.3874] },
+            { name: "Positano", coordinates: [14.4858, 40.6280] }, { name: "Naples", coordinates: [14.2681, 40.8518] },
+            { name: "West Yellowstone", coordinates: [-111.1053, 44.6622] }, { name: "Big Sky", coordinates: [-111.3033, 45.2811] },
+            { name: "Huntsville", coordinates: [-86.5861, 34.7304] }, { name: "Atlanta", coordinates: [-84.3880, 33.7490] },
+            { name: "Charleston", coordinates: [-79.9311, 32.7765] }, { name: "Myrtle Beach", coordinates: [-78.8867, 33.6891] },
+            { name: "New Haven", coordinates: [-72.9279, 41.3083] }, { name: "Phoenix", coordinates: [-112.0740, 33.4484] },
+            { name: "Maui", coordinates: [-156.3319, 20.7984] }, { name: "Boston", coordinates: [-71.0589, 42.3601] },
+            { name: "Colorado Springs", coordinates: [-104.8214, 38.8339] }, { name: "Providence", coordinates: [-71.4128, 41.8240] },
+            { name: "Kīlauea", coordinates: [-159.4122, 22.2140] }, { name: "Jammu", coordinates: [74.8723, 32.7266] },
+            { name: "Srinagar", coordinates: [74.7973, 34.0837] }, { name: "Trivandrum", coordinates: [76.9366, 8.5241] },
+            { name: "Munnar", coordinates: [77.0595, 10.0889] }, { name: "Asansol", coordinates: [86.9669, 23.6739] },
+            { name: "Puri", coordinates: [85.8312, 19.8135] }, { name: "Jamshedpur", coordinates: [86.2029, 22.8046] },
+            { name: "Mumbai", coordinates: [72.8777, 19.0760] }, { name: "Doha", coordinates: [51.5310, 25.2854] },
+            { name: "Kathmandu", coordinates: [85.3240, 27.7172] }, { name: "Pokhara", coordinates: [83.9856, 28.2096] }
         ];
 
         const container = document.getElementById('map-container');
@@ -286,34 +280,21 @@
         ]).then(([worldData, usData, indiaData]) => {
             mapDataCache = { worldData, usData, indiaData };
             
-            const worldBtn = document.getElementById('show-world');
-            const europeBtn = document.getElementById('show-europe');
-            const usaBtn = document.getElementById('show-usa');
-            const indiaBtn = document.getElementById('show-india');
-            const visitedCitiesBtn = document.getElementById('show-visited-cities');
-            const livedInCitiesBtn = document.getElementById('show-lived-in-cities');
-
-            worldBtn.addEventListener('click', () => { currentMap = 'world'; redrawCurrentMap(); });
-            europeBtn.addEventListener('click', () => { currentMap = 'europe'; redrawCurrentMap(); });
-            usaBtn.addEventListener('click', () => { currentMap = 'usa'; redrawCurrentMap(); });
-            indiaBtn.addEventListener('click', () => { currentMap = 'india'; redrawCurrentMap(); });
+            document.getElementById('show-world').addEventListener('click', () => { currentMap = 'world'; redrawCurrentMap(); });
+            document.getElementById('show-europe').addEventListener('click', () => { currentMap = 'europe'; redrawCurrentMap(); });
+            document.getElementById('show-usa').addEventListener('click', () => { currentMap = 'usa'; redrawCurrentMap(); });
+            document.getElementById('show-india').addEventListener('click', () => { currentMap = 'india'; redrawCurrentMap(); });
             
-            visitedCitiesBtn.addEventListener('click', () => { 
-                showVisitedCities = !showVisitedCities;
-                if (showVisitedCities) {
-                    showLivedInCities = false;
-                }
+            document.getElementById('show-visited-cities').addEventListener('click', () => {
+                cityFilter = cityFilter === 'visited' ? 'none' : 'visited';
                 redrawCurrentMap();
             });
-            livedInCitiesBtn.addEventListener('click', () => { 
-                showLivedInCities = !showLivedInCities;
-                if (showLivedInCities) {
-                    showVisitedCities = false;
-                }
+            document.getElementById('show-lived-cities').addEventListener('click', () => {
+                cityFilter = cityFilter === 'lived' ? 'none' : 'lived';
                 redrawCurrentMap();
             });
 
-            redrawCurrentMap(); // Initial Draw
+            redrawCurrentMap();
         }).catch(error => {
             console.error("Error loading map data:", error);
             container.innerHTML = "<p class='text-red-500'>Could not load map data. Please try refreshing the page.</p>";
@@ -325,147 +306,133 @@
             else if (currentMap === 'usa') drawUsaMap();
             else if (currentMap === 'india') drawIndiaMap();
             
-            // Update active button style for maps
-            document.querySelectorAll('#map-controls .map-control-btn').forEach(btn => {
-                const btnId = btn.id;
-                if (btnId.startsWith('show-') && !btnId.includes('cities')) {
-                     btn.classList.remove('active');
-                }
-            });
+            updateButtonStates();
+        }
+
+        function updateButtonStates() {
+            document.querySelectorAll('.map-control-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`show-${currentMap}`).classList.add('active');
 
-            // Update active state for city toggles
-            document.getElementById('show-visited-cities').classList.toggle('active', showVisitedCities);
-            document.getElementById('show-lived-in-cities').classList.toggle('active', showLivedInCities);
+            const visitedBtn = document.getElementById('show-visited-cities');
+            const livedBtn = document.getElementById('show-lived-cities');
+            
+            visitedBtn.classList.toggle('active', cityFilter === 'visited');
+            livedBtn.classList.toggle('active', cityFilter === 'lived');
         }
 
         function getMapColors() {
             return {
-                visited: '#FF2800',
-                default: '#d1d5db',
-                hover: '#9ca3af',
-                visitedHover: '#E52500',
-                city: '#3b82f6',
-                cityHover: '#1d4ed8',
-                livedIn: '#a855f7', // purple-500
-                livedInHover: '#9333ea' // purple-600
+                visited: '#FF2800', default: '#d1d5db', hover: '#9ca3af',
+                visitedHover: '#E52500', city: '#3b82f6', cityHover: '#1d4ed8',
+                milestone: '#8b5cf6', milestoneHover: '#6d28d9'
             };
         }
-        
-        function drawVisitedCities(projection, baseRadius = 3.5) {
+
+        function drawCitiesLayer(projection) {
+            if (cityFilter === 'none') return;
+
+            const data = cityFilter === 'lived' ? citiesLived : allVisitedCities;
             const colors = getMapColors();
-             svg.append("g")
-                .attr('class', 'visited-cities-layer')
-                .selectAll("circle")
-                .data(visitedCitiesData)
-                .enter()
-                .append("circle")
-                .attr("class", "city-dot")
-                .attr("cx", d => projection(d.coordinates) ? projection(d.coordinates)[0] : null)
-                .attr("cy", d => projection(d.coordinates) ? projection(d.coordinates)[1] : null)
-                .attr("r", d => projection(d.coordinates) ? baseRadius : 0)
-                .style("fill", colors.city)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.name);
-                    d3.select(this).style("fill", colors.cityHover).attr("r", baseRadius + 1.5);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).style("fill", colors.city).attr("r", baseRadius);
-                });
+
+            if (cityFilter === 'lived') {
+                svg.append("g").selectAll("path.milestone-icon")
+                    .data(data).enter().append("path")
+                    .attr("class", "milestone-icon")
+                    .attr("d", "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z")
+                    .attr("transform", d => {
+                        const [x, y] = projection(d.coordinates) || [null, null];
+                        if (x === null) return 'scale(0)';
+                        const scale = currentMap === 'world' ? 0.8 : 1.2;
+                        return `translate(${x - (12 * scale / 2)}, ${y - (12 * scale / 2)}) scale(${scale})`;
+                    })
+                    .style("fill", colors.milestone)
+                    .on("mouseover", function(event, d) {
+                        showTooltip(event, d.name);
+                        d3.select(this).style("fill", colors.milestoneHover);
+                    })
+                    .on("mouseout", function(event, d) {
+                        hideTooltip();
+                        d3.select(this).style("fill", colors.milestone);
+                    });
+            } else { // 'visited'
+                const radius = currentMap === 'world' ? 3.5 : (currentMap === 'europe' ? 4 : 5);
+                svg.append("g").selectAll("circle.city-dot")
+                    .data(data).enter().append("circle")
+                    .attr("class", "city-dot")
+                    .attr("cx", d => (projection(d.coordinates) || [null])[0])
+                    .attr("cy", d => (projection(d.coordinates) || [null, null])[1])
+                    .attr("r", d => projection(d.coordinates) ? radius : 0)
+                    .style("fill", colors.city)
+                    .on("mouseover", function(event, d) {
+                        showTooltip(event, d.name);
+                        d3.select(this).style("fill", colors.cityHover).attr("r", radius + 1.5);
+                    })
+                    .on("mouseout", function(event, d) {
+                        hideTooltip();
+                        d3.select(this).style("fill", colors.city).attr("r", radius);
+                    });
+            }
         }
-        
-        function drawLivedInCities(projection, scale = 1.2) {
+
+        function drawBaseMap(features, path, visitedSet, nameProperty) {
             const colors = getMapColors();
-            // A path for a diamond, representing a milestone
-            const milestonePath = "M0,-8 L8,0 L0,8 L-8,0 Z";
-            
-            svg.append("g")
-               .attr('class', 'lived-in-cities-layer')
+            svg.selectAll("path.country, path.state, path.india-state").remove();
+
+            svg.insert("g", ".milestone-icon, .city-dot")
                .selectAll("path")
-               .data(livedInCitiesData)
-               .enter()
-               .append("path")
-               .attr("class", "milestone-marker")
-               .attr("d", milestonePath)
-               .attr("transform", d => {
-                   const coords = projection(d.coordinates);
-                   return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale})` : "scale(0)";
-               })
-               .style("fill", colors.livedIn)
+               .data(features)
+               .enter().append("path")
+               .attr("d", path)
+               .attr("class", d => d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon' ? (currentMap === 'world' || currentMap === 'europe' ? 'country' : (currentMap === 'usa' ? 'state' : 'india-state')) : '')
+               .attr("fill", d => visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default)
                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.name);
-                    d3.select(this).style("fill", colors.livedInHover).attr("transform", d => {
-                        const coords = projection(d.coordinates);
-                        return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale * 1.2})` : "scale(0)";
-                    });
+                    showTooltip(event, d.properties[nameProperty]);
+                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visitedHover : colors.hover);
                 })
                 .on("mouseout", function(event, d) {
                     hideTooltip();
-                    d3.select(this).style("fill", colors.livedIn).attr("transform", d => {
-                        const coords = projection(d.coordinates);
-                        return coords ? `translate(${coords[0]}, ${coords[1]}) scale(${scale})` : "scale(0)";
-                    });
+                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default);
                 });
         }
-
-        function drawMapBase(geography, pathGenerator, visitedSet, nameKey) {
-             const colors = getMapColors();
-             svg.append("g").selectAll("path").data(geography.features).enter().append("path")
-                .attr("d", pathGenerator).attr("class", "country")
-                .attr("fill", d => visitedSet.has(d.properties[nameKey]) ? colors.visited : colors.default)
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties[nameKey]);
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameKey]) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameKey]) ? colors.visited : colors.default);
-                });
-        }
-
+        
         function drawWorldMap() {
-            const { worldData } = mapDataCache;
-            if (!worldData) return;
+            const { worldData } = mapDataCache; if (!worldData) return;
             svg.selectAll("*").remove();
             const projection = d3.geoMercator().scale(150).center([0, 40]).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            drawMapBase(topojson.feature(worldData, worldData.objects.countries), path, visitedCountries, 'name');
-            if (showVisitedCities) drawVisitedCities(projection, 3.5);
-            if (showLivedInCities) drawLivedInCities(projection, 0.8);
+            const countries = topojson.feature(worldData, worldData.objects.countries);
+            drawBaseMap(countries.features, path, visitedCountries, 'name');
+            drawCitiesLayer(projection);
         }
         
         function drawEuropeMap() {
-            const { worldData } = mapDataCache;
-            if (!worldData) return;
+            const { worldData } = mapDataCache; if (!worldData) return;
             svg.selectAll("*").remove();
             const projection = d3.geoMercator().center([20, 52]).scale(550).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            drawMapBase(topojson.feature(worldData, worldData.objects.countries), path, visitedCountries, 'name');
-            if (showVisitedCities) drawVisitedCities(projection, 4);
-            if (showLivedInCities) drawLivedInCities(projection);
+            const countries = topojson.feature(worldData, worldData.objects.countries);
+            drawBaseMap(countries.features, path, visitedCountries, 'name');
+            drawCitiesLayer(projection);
         }
 
         function drawUsaMap() {
-            const { usData } = mapDataCache;
-            if (!usData) return;
+            const { usData } = mapDataCache; if (!usData) return;
             svg.selectAll("*").remove();
             const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1200);
             const path = d3.geoPath().projection(projection);
-            drawMapBase(topojson.feature(usData, usData.objects.states), path, visitedStates, 'name');
-            if (showVisitedCities) drawVisitedCities(projection, 5);
-            if (showLivedInCities) drawLivedInCities(projection);
+            const states = topojson.feature(usData, usData.objects.states);
+            drawBaseMap(states.features, path, visitedStates, 'name');
+            drawCitiesLayer(projection);
         }
             
         function drawIndiaMap() {
-            const { indiaData } = mapDataCache;
-            if (!indiaData) return;
+            const { indiaData } = mapDataCache; if (!indiaData) return;
             svg.selectAll("*").remove();
             const projection = d3.geoMercator().center([82.8, 23.5]).scale(1000).translate([480, 300]);
             const path = d3.geoPath().projection(projection);
-            drawMapBase(topojson.feature(indiaData, indiaData.objects.states), path, visitedIndianStates, 'st_nm');
-            if (showVisitedCities) drawVisitedCities(projection, 5);
-            if (showLivedInCities) drawLivedInCities(projection);
+            const states = topojson.feature(indiaData, indiaData.objects.states);
+            drawBaseMap(states.features, path, visitedIndianStates, 'st_nm');
+            drawCitiesLayer(projection);
         }
 
         function showTooltip(event, name) {
@@ -480,7 +447,6 @@
         }
     </script>
     
-    <!-- Footer -->
     <footer class="w-full text-center py-8 bg-white">
         <p class="text-gray-500 transition-colors duration-300 group relative inline-block hover:text-gray-800">
             Designed and built by 
