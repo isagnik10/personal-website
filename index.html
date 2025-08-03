@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sagnik's Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+        }
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+        /* Style for the map countries */
+        .country, .state {
+            stroke: white;
+            stroke-width: 0.5px;
+            transition: fill 0.3s;
+        }
+        .country-visited, .state-visited {
+            fill: #FF2800; /* Ferrari Red */
+        }
+        .country-default, .state-default {
+            fill: #d1d5db; /* Gray-300 */
+        }
+        .country:hover, .state:hover {
+            fill: #9ca3af; /* Gray-400 */
+        }
+        .country-visited:hover, .state-visited:hover {
+            fill: #E52500; /* Darker Red */
+        }
+        #tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .map-control-btn.active {
+            background-color: #FF2800;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-black">
+
+    <!-- Dropdown Menu -->
+    <div class="absolute top-6 right-6 z-10">
+        <div class="relative group pb-4">
+            <button type="button" class="text-lg font-medium text-gray-800 focus:outline-none pb-1" id="options-menu" aria-haspopup="true" aria-expanded="false">
+                Projects
+                <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full group-focus-within:w-full"></span>
+            </button>
+            <!-- Dropdown content -->
+            <div id="dropdown-content" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 scale-95 transform transition-all duration-200 ease-in-out pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <a href="https://pokertracker-dea19.web.app/" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center" role="menuitem">PokerTracker</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative flex flex-col items-center justify-center min-h-screen text-center py-12 px-4">
+        <!-- Heading -->
+        <div class="mb-4">
+            <h1 class="text-6xl md:text-7xl font-bold">
+                <span class="font-cursive italic font-bold text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-600 mt-2">More coming soon!</p>
+        </div>
+
+        <!-- Divider -->
+        <hr class="w-1/4 md:w-1/5 border-t border-[#FF2800] my-8">
+
+        <!-- Social Media Links -->
+        <div class="flex flex-wrap justify-center gap-4">
+             <!-- Replace '#' with your actual social media links -->
+            <a href="#" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                LinkedIn
+            </a>
+            <a href="#" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                GitHub
+            </a>
+            <a href="#" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                Twitter
+            </a>
+        </div>
+
+        <!-- Scroll Down Arrow -->
+        <div class="absolute bottom-10">
+            <a href="#travels" aria-label="Scroll to travels section">
+                <svg class="w-8 h-8 text-[#FF2800] animate-bounce" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Travels Section -->
+    <section id="travels" class="min-h-screen bg-white w-full py-20 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto text-center flex flex-col items-center">
+            <h2 class="text-4xl font-bold mb-4">Travels</h2>
+            <p class="text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
+            
+            <!-- Map Controls -->
+            <div id="map-controls" class="flex justify-center gap-4 mb-4">
+                <button id="show-world" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md transition-colors duration-200">World</button>
+                <button id="show-usa" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md transition-colors duration-200">USA</button>
+            </div>
+
+            <div id="map-container" class="w-full" style="max-width: 960px;">
+                <!-- Interactive map will be rendered here -->
+            </div>
+            <div id="tooltip"></div>
+        </div>
+    </section>
+
+    <!-- D3 and TopoJSON scripts -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+
+    <script>
+        // Dropdown is now handled by CSS group-hover.
+
+        // --- Interactive Map Script ---
+
+        const visitedCountries = new Set([
+            "India", "Libya", "United Kingdom", "Oman", "United Arab Emirates", 
+            "United States of America", "Nepal", "Turkey", "Taiwan", "France", 
+            "Belgium", "Netherlands", "Italy", "Vatican", "Spain", "Portugal", 
+            "South Korea", "Singapore", "Qatar", "China" // Add China for Hong Kong/Macau
+        ]);
+
+        const visitedStates = new Set([
+            "Virginia", "North Carolina", "Florida", "South Carolina", "Alabama", "Georgia", 
+            "Texas", "Colorado", "New Mexico", "Arizona", "Nevada", "California", "New York", 
+            "Illinois", "Maryland", "Delaware", "Pennsylvania", "New Jersey", "Connecticut", 
+            "Rhode Island", "Massachusetts", "Montana", "Wyoming", "Hawaii", "Kentucky", "Ohio", 
+            "Indiana", "Puerto Rico", "District of Columbia"
+        ]);
+
+        const container = document.getElementById('map-container');
+        const svg = d3.select("#map-container").append("svg")
+            .attr("viewBox", `0 0 960 600`)
+            .style("width", "100%")
+            .style("height", "auto");
+            
+        const tooltip = d3.select("#tooltip");
+
+        const worldMapUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+        const usMapUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+
+        Promise.all([
+            d3.json(worldMapUrl),
+            d3.json(usMapUrl)
+        ]).then(([worldData, usData]) => {
+            const worldBtn = document.getElementById('show-world');
+            const usaBtn = document.getElementById('show-usa');
+
+            const drawWorldMap = () => {
+                svg.selectAll("*").remove(); // Clear previous map
+                const projection = d3.geoMercator().scale(150).center([0, 40]).translate([480, 300]);
+                const path = d3.geoPath().projection(projection);
+                const countries = topojson.feature(worldData, worldData.objects.countries);
+
+                svg.selectAll("path")
+                    .data(countries.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .attr("class", d => `country ${visitedCountries.has(d.properties.name) ? 'country-visited' : 'country-default'}`)
+                    .on("mouseover", (event, d) => showTooltip(event, d.properties.name))
+                    .on("mouseout", hideTooltip);
+            };
+
+            const drawUsaMap = () => {
+                svg.selectAll("*").remove(); // Clear previous map
+                const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1200);
+                const path = d3.geoPath().projection(projection);
+                const states = topojson.feature(usData, usData.objects.states);
+                
+                svg.append("g")
+                    .selectAll("path")
+                    .data(states.features)
+                    .join("path")
+                    .attr("d", path)
+                    .attr("class", d => `state ${visitedStates.has(d.properties.name) ? 'state-visited' : 'state-default'}`)
+                    .on("mouseover", (event, d) => showTooltip(event, d.properties.name))
+                    .on("mouseout", hideTooltip);
+            };
+
+            const showTooltip = (event, name) => {
+                tooltip.transition().duration(200).style("opacity", .9);
+                tooltip.html(name)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            };
+
+            const hideTooltip = () => {
+                tooltip.transition().duration(500).style("opacity", 0);
+            };
+
+            worldBtn.addEventListener('click', () => {
+                worldBtn.classList.add('active');
+                usaBtn.classList.remove('active');
+                drawWorldMap();
+            });
+
+            usaBtn.addEventListener('click', () => {
+                usaBtn.classList.add('active');
+                worldBtn.classList.remove('active');
+                drawUsaMap();
+            });
+
+            // Initial Draw
+            worldBtn.classList.add('active');
+            drawWorldMap();
+
+        }).catch(error => {
+            console.error("Error loading map data:", error);
+            container.innerHTML = "<p class='text-red-500'>Could not load map data. Please try refreshing the page.</p>";
+        });
+    </script>
+</body>
+</html>
+
