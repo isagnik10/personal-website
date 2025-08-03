@@ -62,13 +62,13 @@
             position: relative;
             height: 1.5em; /* Adjust based on font size */
             width: 9em; /* Adjust to fit the longest text */
-            text-align: right;
+            text-align: center; /* Changed from right */
             vertical-align: bottom;
             overflow: hidden;
         }
         .rotating-text-item {
             position: absolute;
-            right: 0;
+            left: 0; /* Changed from right: 0 */
             top: 0;
             width: 100%;
             opacity: 0;
@@ -99,10 +99,10 @@
 <body class="bg-gray-50 text-black">
 
     <!-- Navigation -->
-    <div class="absolute top-6 right-16 z-10 flex items-center gap-8">
+    <div class="absolute top-4 right-4 sm:top-6 sm:right-8 md:right-16 z-10 flex items-center gap-4 md:gap-8">
         <!-- Projects Dropdown -->
         <div class="relative group pb-4">
-            <button type="button" class="text-lg font-medium text-gray-800 focus:outline-none pb-1" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none pb-1" aria-haspopup="true" aria-expanded="false">
                 Projects
                 <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full group-focus-within:w-full"></span>
             </button>
@@ -114,7 +114,7 @@
             </div>
         </div>
         <!-- Contact Link -->
-        <a href="#contact" class="text-lg font-medium text-gray-800 focus:outline-none relative group pb-4">
+        <a href="#contact" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none relative group pb-4">
             Contact
             <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full"></span>
         </a>
@@ -123,11 +123,11 @@
     <!-- Main Content -->
     <div class="relative flex flex-col items-center justify-center min-h-screen text-center py-12 px-4">
         <div class="mb-4">
-            <h1 class="text-6xl md:text-7xl font-bold whitespace-nowrap">
-                <span class="font-cursive italic font-bold text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold whitespace-nowrap">
+                <span class="font-cursive italic font-bold text-6xl sm:text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
             </h1>
-            <p class="text-xl md:text-2xl text-gray-600 mt-2 flex items-center justify-center gap-1">
-                <span class="rotating-text-container">
+            <p class="text-lg sm:text-xl md:text-2xl text-gray-600 mt-2 flex items-center justify-center">
+                <span class="rotating-text-container mr-2">
                     <span class="rotating-text-item">Thriving in</span>
                     <span class="rotating-text-item">Surviving</span>
                     <span class="rotating-text-item">Exploring</span>
@@ -136,7 +136,7 @@
                 <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                 San Francisco
+                San Francisco
             </p>
         </div>
 
@@ -162,8 +162,8 @@
     <!-- Travels Section -->
     <section id="travels" class="min-h-screen bg-white w-full py-20 px-4 md:px-8">
         <div class="max-w-6xl mx-auto text-center flex flex-col items-center">
-            <h2 class="text-4xl font-bold mb-4">Travels</h2>
-            <p class="text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Travels</h2>
+            <p class="text-base md:text-lg text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
             
             <div id="map-controls" class="flex justify-center gap-2 sm:gap-4 mb-4 flex-wrap">
                 <button id="show-world" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">World</button>
@@ -188,9 +188,9 @@
     <!-- Contact Section -->
     <section id="contact" class="w-full py-20 bg-gray-50">
         <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-4">Contact</h2>
-            <p class="text-gray-600 text-lg mb-4">Feel free to reach out!</p>
-            <p class="text-gray-600 text-lg group inline-flex items-center gap-2">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact</h2>
+            <p class="text-base md:text-lg text-gray-600 mb-4">Feel free to reach out!</p>
+            <p class="text-base md:text-lg text-gray-600 group inline-flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
