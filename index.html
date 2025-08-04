@@ -51,7 +51,7 @@
              transition: background-color 0.3s, color 0.3s;
         }
         .city-filter-btn.active {
-            background-color: #FF2800; /* Changed from blue to red */
+            background-color: #FF2800;
             color: white;
             font-weight: bold;
         }
@@ -60,37 +60,37 @@
         .rotating-text-container {
             display: inline-block;
             position: relative;
-            height: 1.5em; /* Adjust based on font size */
-            width: 9em; /* Adjust to fit the longest text */
-            text-align: center; /* Changed from right */
+            height: 1.5em; 
+            width: 9em; 
+            text-align: center; 
             vertical-align: bottom;
             overflow: hidden;
         }
         .rotating-text-item {
             position: absolute;
-            left: 0; /* Changed from right: 0 */
+            left: 0; 
             top: 0;
             width: 100%;
             opacity: 0;
-            transform: translateY(100%); /* Start below */
-            animation: rotate-text 8s linear infinite; /* Faster animation */
+            transform: translateY(100%); 
+            animation: rotate-text 8s linear infinite; 
         }
         .rotating-text-item:nth-child(1) { animation-delay: 0s; }
-        .rotating-text-item:nth-child(2) { animation-delay: 2s; } /* 8s / 4 items = 2s delay each */
+        .rotating-text-item:nth-child(2) { animation-delay: 2s; } 
         .rotating-text-item:nth-child(3) { animation-delay: 4s; }
         .rotating-text-item:nth-child(4) { animation-delay: 6s; }
 
         @keyframes rotate-text {
             0% {
-                transform: translateY(100%); /* Start below */
+                transform: translateY(100%);
                 opacity: 0;
             }
             5%, 20% {
-                transform: translateY(0); /* Move into view */
+                transform: translateY(0);
                 opacity: 1;
             }
             25%, 100% {
-                transform: translateY(-100%); /* Move up and out */
+                transform: translateY(-100%);
                 opacity: 0;
             }
         }
@@ -99,7 +99,7 @@
 <body class="bg-gray-50 text-black">
 
     <!-- Navigation -->
-    <div class="absolute top-4 right-4 sm:top-6 sm:right-8 md:right-16 z-10 flex items-center gap-4 md:gap-8">
+    <div class="absolute top-4 right-4 sm:top-6 sm:right-8 md:right-16 z-20 flex items-center gap-4 md:gap-8">
         <!-- Projects Dropdown -->
         <div class="relative group pb-4">
             <button type="button" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none" aria-haspopup="true" aria-expanded="false">
@@ -121,36 +121,39 @@
     </div>
 
     <!-- Main Content -->
-    <div class="relative flex flex-col items-center justify-center min-h-screen text-center py-12 px-4">
-        <div class="mb-4">
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold whitespace-nowrap">
-                <span class="font-cursive italic font-bold text-6xl sm:text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl text-gray-600 mt-2 flex items-center justify-center">
-                <span class="rotating-text-container mr-2">
-                    <span class="rotating-text-item">Thriving in</span>
-                    <span class="rotating-text-item">Surviving</span>
-                    <span class="rotating-text-item">Exploring</span>
-                    <span class="rotating-text-item">Tolerating</span>
-                </span>
-                <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                San Francisco
-            </p>
+    <div class="relative flex flex-col items-center justify-center min-h-screen text-center py-12 px-4 overflow-hidden">
+        <canvas id="shooting-stars-canvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
+        <div class="relative z-10">
+            <div class="mb-4">
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold whitespace-nowrap">
+                    <span class="font-cursive italic font-bold text-6xl sm:text-7xl md:text-8xl">Hi,</span> I'm Sagnik!
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-gray-600 mt-2 flex items-baseline justify-center">
+                    <span class="rotating-text-container mr-2 relative top-2">
+                        <span class="rotating-text-item">Thriving in</span>
+                        <span class="rotating-text-item">Surviving</span>
+                        <span class="rotating-text-item">Exploring</span>
+                        <span class="rotating-text-item">Tolerating</span>
+                    </span>
+                    <svg class="w-6 h-6 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    San Francisco
+                </p>
+            </div>
+
+            <hr class="w-1/4 md:w-1/5 border-t border-[#FF2800] my-8 mx-auto">
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://www.linkedin.com/in/sagnik10/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">LinkedIn</a>
+                <a href="https://github.com/isagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">GitHub</a>
+                <a href="https://www.instagram.com/sagnik.cc/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Instagram</a>
+                <a href="https://www.chess.com/member/isagnik10" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Chess.com</a>
+                <a href="https://beliapp.co/app/sagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Beli</a>
+            </div>
         </div>
 
-        <hr class="w-1/4 md:w-1/5 border-t border-[#FF2800] my-8">
-
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="https://www.linkedin.com/in/sagnik10/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">LinkedIn</a>
-            <a href="https://github.com/isagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">GitHub</a>
-            <a href="https://www.instagram.com/sagnik.cc/" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Instagram</a>
-            <a href="https://www.chess.com/member/isagnik10" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Chess.com</a>
-            <a href="https://beliapp.co/app/sagnik" class="bg-white hover:bg-gray-200 text-black font-semibold py-3 px-6 rounded-xl shadow-md transition-transform transform hover:scale-105">Beli</a>
-        </div>
-
-        <div class="absolute bottom-10">
+        <div class="absolute bottom-10 z-10">
             <a href="#travels" aria-label="Scroll to travels section">
                 <svg class="w-8 h-8 text-[#FF2800] animate-bounce" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="M19 9l-7 7-7-7"></path>
@@ -208,247 +211,98 @@
     <script src="https://d3js.org/topojson.v3.min.js"></script>
 
     <script>
+        // Map script
         let currentMap = 'world';
-        let cityFilter = 'none'; // 'visited', 'lived', 'none'
+        let cityFilter = 'none'; 
         let mapDataCache = {};
-
         const visitedCountries = new Set(["India", "Libya", "United Kingdom", "Oman", "United Arab Emirates", "United States of America", "Nepal", "Turkey", "Taiwan", "France", "Belgium", "Netherlands", "Italy", "Vatican", "Spain", "Portugal", "South Korea", "Singapore", "Qatar", "Hong Kong"]);
         const visitedStates = new Set(["Virginia", "North Carolina", "Florida", "South Carolina", "Alabama", "Georgia", "Texas", "Colorado", "New Mexico", "Arizona", "Nevada", "California", "New York", "Illinois", "Maryland", "Delaware", "Pennsylvania", "New Jersey", "Connecticut", "Rhode Island", "Massachusetts", "Montana", "Wyoming", "Hawaii", "Kentucky", "Ohio", "Indiana", "Puerto Rico", "District of Columbia"]);
         const visitedIndianStates = new Set(["Jammu and Kashmir", "Uttar Pradesh", "West Bengal", "Jharkhand", "Odisha", "Assam", "Mizoram", "Tripura", "Karnataka", "Maharashtra", "Goa", "Kerala", "Rajasthan", "Haryana", "Tamil Nadu", "Delhi", "Puducherry"]);
-        
-        const citiesLived = [
-            { name: "Kolkata", coordinates: [88.3639, 22.5726] }, { name: "Jodhpur", coordinates: [73.0243, 26.2389] },
-            { name: "New Delhi", coordinates: [77.2090, 28.6139] }, { name: "Bangalore", coordinates: [77.5946, 12.9716] },
-            { name: "Sirt", coordinates: [16.5887, 31.2089] }, { name: "London", coordinates: [-0.1278, 51.5074] },
-            { name: "Muscat", coordinates: [58.3829, 23.5859] }, { name: "Raleigh", coordinates: [-78.6382, 35.7796] },
-            { name: "San Francisco", coordinates: [-122.4194, 37.7749] }
-        ];
-
-        const allVisitedCities = [
-            ...citiesLived,
-            { name: "New York City", coordinates: [-74.0060, 40.7128] }, { name: "Macau", coordinates: [113.5439, 22.1987] },
-            { name: "Singapore", coordinates: [103.8198, 1.3521] }, { name: "Tripoli", coordinates: [13.1913, 32.8872] },
-            { name: "Paris", coordinates: [2.3522, 48.8566] }, { name: "Brussels", coordinates: [4.3517, 50.8503] },
-            { name: "Amsterdam", coordinates: [4.9041, 52.3676] }, { name: "Rome", coordinates: [12.4964, 41.9028] },
-            { name: "San Diego", coordinates: [-117.1611, 32.7157] }, { name: "Denver", coordinates: [-104.9903, 39.7392] },
-            { name: "Boulder", coordinates: [-105.2705, 40.0150] }, { name: "Charlotte", coordinates: [-80.8431, 35.2271] },
-            { name: "Zaanse Schans", coordinates: [4.8181, 52.4736] }, { name: "Los Angeles", coordinates: [-118.2437, 34.0522] },
-            { name: "Chicago", coordinates: [-87.6298, 41.8781] }, { name: "Miami", coordinates: [-80.1918, 25.7617] },
-            { name: "Austin", coordinates: [-97.7431, 30.2672] }, { name: "Houston", coordinates: [-95.3698, 29.7604] },
-            { name: "Dubai", coordinates: [55.2708, 25.2048] }, { name: "Venice", coordinates: [12.3155, 45.4408] },
-            { name: "Seoul", coordinates: [126.9780, 37.5665] }, { name: "Hong Kong", coordinates: [114.1694, 22.3193] },
-            { name: "Orlando", coordinates: [-81.3792, 28.5383] }, { name: "Taipei", coordinates: [121.5654, 25.0330] },
-            { name: "Istanbul", coordinates: [28.9784, 41.0082] }, { name: "Cappadocia", coordinates: [34.8255, 38.6431] },
-            { name: "Baltimore", coordinates: [-76.6122, 39.2904] }, { name: "Santa Fe", coordinates: [-105.9378, 35.6870] },
-            { name: "Indianapolis", coordinates: [-86.1581, 39.7684] }, { name: "Cincinnati", coordinates: [-84.5120, 39.1031] },
-            { name: "Williamsburg", coordinates: [-76.7075, 37.2707] }, { name: "Philadelphia", coordinates: [-75.1652, 39.9526] },
-            { name: "Napa", coordinates: [-122.2855, 38.2975] }, { name: "Sacramento", coordinates: [-121.4944, 38.5816] },
-            { name: "Palm Springs", coordinates: [-116.5453, 33.8303] }, { name: "Las Vegas", coordinates: [-115.1398, 36.1699] },
-            { name: "Salalah", coordinates: [54.0924, 17.0293] }, { name: "Seville", coordinates: [-5.9845, 37.3891] },
-            { name: "Porto", coordinates: [-8.6291, 41.1579] }, { name: "Lisbon", coordinates: [-9.1393, 38.7223] },
-            { name: "Madrid", coordinates: [-3.7038, 40.4168] }, { name: "Barcelona", coordinates: [2.1686, 41.3874] },
-            { name: "Positano", coordinates: [14.4858, 40.6280] }, { name: "Naples", coordinates: [14.2681, 40.8518] },
-            { name: "West Yellowstone", coordinates: [-111.1053, 44.6622] }, { name: "Big Sky", coordinates: [-111.3033, 45.2811] },
-            { name: "Huntsville", coordinates: [-86.5861, 34.7304] }, { name: "Atlanta", coordinates: [-84.3880, 33.7490] },
-            { name: "Charleston", coordinates: [-79.9311, 32.7765] }, { name: "Myrtle Beach", coordinates: [-78.8867, 33.6891] },
-            { name: "New Haven", coordinates: [-72.9279, 41.3083] }, { name: "Phoenix", coordinates: [-112.0740, 33.4484] },
-            { name: "Maui", coordinates: [-156.3319, 20.7984] }, { name: "Boston", coordinates: [-71.0589, 42.3601] },
-            { name: "Colorado Springs", coordinates: [-104.8214, 38.8339] }, { name: "Providence", coordinates: [-71.4128, 41.8240] },
-            { name: "Kīlauea", coordinates: [-159.4122, 22.2140] }, { name: "Jammu", coordinates: [74.8723, 32.7266] },
-            { name: "Srinagar", coordinates: [74.7973, 34.0837] }, { name: "Trivandrum", coordinates: [76.9366, 8.5241] },
-            { name: "Munnar", coordinates: [77.0595, 10.0889] }, { name: "Asansol", coordinates: [86.9669, 23.6739] },
-            { name: "Puri", coordinates: [85.8312, 19.8135] }, { name: "Jamshedpur", coordinates: [86.2029, 22.8046] },
-            { name: "Mumbai", coordinates: [72.8777, 19.0760] }, { name: "Doha", coordinates: [51.5310, 25.2854] },
-            { name: "Kathmandu", coordinates: [85.3240, 27.7172] }, { name: "Pokhara", coordinates: [83.9856, 28.2096] }
-        ];
-
-        const container = document.getElementById('map-container');
-        const svg = d3.select("#map-container").append("svg")
-            .attr("viewBox", `0 0 960 600`)
-            .style("width", "100%")
-            .style("height", "auto");
-            
-        const tooltip = d3.select("#tooltip");
-
+        const citiesLived = [{ name: "Kolkata", coordinates: [88.3639, 22.5726] }, { name: "Jodhpur", coordinates: [73.0243, 26.2389] }, { name: "New Delhi", coordinates: [77.2090, 28.6139] }, { name: "Bangalore", coordinates: [77.5946, 12.9716] }, { name: "Sirt", coordinates: [16.5887, 31.2089] }, { name: "London", coordinates: [-0.1278, 51.5074] }, { name: "Muscat", coordinates: [58.3829, 23.5859] }, { name: "Raleigh", coordinates: [-78.6382, 35.7796] }, { name: "San Francisco", coordinates: [-122.4194, 37.7749] } ];
+        const allVisitedCities = [ ...citiesLived, { name: "New York City", coordinates: [-74.0060, 40.7128] }, { name: "Macau", coordinates: [113.5439, 22.1987] }, { name: "Singapore", coordinates: [103.8198, 1.3521] }, { name: "Tripoli", coordinates: [13.1913, 32.8872] }, { name: "Paris", coordinates: [2.3522, 48.8566] }, { name: "Brussels", coordinates: [4.3517, 50.8503] }, { name: "Amsterdam", coordinates: [4.9041, 52.3676] }, { name: "Rome", coordinates: [12.4964, 41.9028] }, { name: "San Diego", coordinates: [-117.1611, 32.7157] }, { name: "Denver", coordinates: [-104.9903, 39.7392] }, { name: "Boulder", coordinates: [-105.2705, 40.0150] }, { name: "Charlotte", coordinates: [-80.8431, 35.2271] }, { name: "Zaanse Schans", coordinates: [4.8181, 52.4736] }, { name: "Los Angeles", coordinates: [-118.2437, 34.0522] }, { name: "Chicago", coordinates: [-87.6298, 41.8781] }, { name: "Miami", coordinates: [-80.1918, 25.7617] }, { name: "Austin", coordinates: [-97.7431, 30.2672] }, { name: "Houston", coordinates: [-95.3698, 29.7604] }, { name: "Dubai", coordinates: [55.2708, 25.2048] }, { name: "Venice", coordinates: [12.3155, 45.4408] }, { name: "Seoul", coordinates: [126.9780, 37.5665] }, { name: "Hong Kong", coordinates: [114.1694, 22.3193] }, { name: "Orlando", coordinates: [-81.3792, 28.5383] }, { name: "Taipei", coordinates: [121.5654, 25.0330] }, { name: "Istanbul", coordinates: [28.9784, 41.0082] }, { name: "Cappadocia", coordinates: [34.8255, 38.6431] }, { name: "Baltimore", coordinates: [-76.6122, 39.2904] }, { name: "Santa Fe", coordinates: [-105.9378, 35.6870] }, { name: "Indianapolis", coordinates: [-86.1581, 39.7684] }, { name: "Cincinnati", coordinates: [-84.5120, 39.1031] }, { name: "Williamsburg", coordinates: [-76.7075, 37.2707] }, { name: "Philadelphia", coordinates: [-75.1652, 39.9526] }, { name: "Napa", coordinates: [-122.2855, 38.2975] }, { name: "Sacramento", coordinates: [-121.4944, 38.5816] }, { name: "Palm Springs", coordinates: [-116.5453, 33.8303] }, { name: "Las Vegas", coordinates: [-115.1398, 36.1699] }, { name: "Salalah", coordinates: [54.0924, 17.0293] }, { name: "Seville", coordinates: [-5.9845, 37.3891] }, { name: "Porto", coordinates: [-8.6291, 41.1579] }, { name: "Lisbon", coordinates: [-9.1393, 38.7223] }, { name: "Madrid", coordinates: [-3.7038, 40.4168] }, { name: "Barcelona", coordinates: [2.1686, 41.3874] }, { name: "Positano", coordinates: [14.4858, 40.6280] }, { name: "Naples", coordinates: [14.2681, 40.8518] }, { name: "West Yellowstone", coordinates: [-111.1053, 44.6622] }, { name: "Big Sky", coordinates: [-111.3033, 45.2811] }, { name: "Huntsville", coordinates: [-86.5861, 34.7304] }, { name: "Atlanta", coordinates: [-84.3880, 33.7490] }, { name: "Charleston", coordinates: [-79.9311, 32.7765] }, { name: "Myrtle Beach", coordinates: [-78.8867, 33.6891] }, { name: "New Haven", coordinates: [-72.9279, 41.3083] }, { name: "Phoenix", coordinates: [-112.0740, 33.4484] }, { name: "Maui", coordinates: [-156.3319, 20.7984] }, { name: "Boston", coordinates: [-71.0589, 42.3601] }, { name: "Colorado Springs", coordinates: [-104.8214, 38.8339] }, { name: "Providence", coordinates: [-71.4128, 41.8240] }, { name: "Kīlauea", coordinates: [-159.4122, 22.2140] }, { name: "Jammu", coordinates: [74.8723, 32.7266] }, { name: "Srinagar", coordinates: [74.7973, 34.0837] }, { name: "Trivandrum", coordinates: [76.9366, 8.5241] }, { name: "Munnar", coordinates: [77.0595, 10.0889] }, { name: "Asansol", coordinates: [86.9669, 23.6739] }, { name: "Puri", coordinates: [85.8312, 19.8135] }, { name: "Jamshedpur", coordinates: [86.2029, 22.8046] }, { name: "Mumbai", coordinates: [72.8777, 19.0760] }, { name: "Doha", coordinates: [51.5310, 25.2854] }, { name: "Kathmandu", coordinates: [85.3240, 27.7172] }, { name: "Pokhara", coordinates: [83.9856, 28.2096] } ];
+        const mapContainer = document.getElementById('map-container');
+        const mapSvg = d3.select("#map-container").append("svg").attr("viewBox", `0 0 960 600`).style("width", "100%").style("height", "auto");
+        const mapTooltip = d3.select("#tooltip");
         const worldMapUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
         const usMapUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
         const indiaMapUrl = "https://cdn.jsdelivr.net/gh/udit-001/india-maps-data@bcbcba3/topojson/india.json";
-
-        Promise.all([
-            d3.json(worldMapUrl),
-            d3.json(usMapUrl),
-            d3.json(indiaMapUrl)
-        ]).then(([worldData, usData, indiaData]) => {
+        Promise.all([d3.json(worldMapUrl), d3.json(usMapUrl), d3.json(indiaMapUrl)]).then(([worldData, usData, indiaData]) => {
             mapDataCache = { worldData, usData, indiaData };
-            
             document.getElementById('show-world').addEventListener('click', () => { currentMap = 'world'; redrawCurrentMap(); });
             document.getElementById('show-europe').addEventListener('click', () => { currentMap = 'europe'; redrawCurrentMap(); });
             document.getElementById('show-usa').addEventListener('click', () => { currentMap = 'usa'; redrawCurrentMap(); });
             document.getElementById('show-india').addEventListener('click', () => { currentMap = 'india'; redrawCurrentMap(); });
-            
-            document.getElementById('show-visited-cities').addEventListener('click', () => {
-                cityFilter = cityFilter === 'visited' ? 'none' : 'visited';
-                redrawCurrentMap();
-            });
-            document.getElementById('show-lived-cities').addEventListener('click', () => {
-                cityFilter = cityFilter === 'lived' ? 'none' : 'lived';
-                redrawCurrentMap();
-            });
-
+            document.getElementById('show-visited-cities').addEventListener('click', () => { cityFilter = cityFilter === 'visited' ? 'none' : 'visited'; redrawCurrentMap(); });
+            document.getElementById('show-lived-cities').addEventListener('click', () => { cityFilter = cityFilter === 'lived' ? 'none' : 'lived'; redrawCurrentMap(); });
             redrawCurrentMap();
-        }).catch(error => {
-            console.error("Error loading map data:", error);
-            container.innerHTML = "<p class='text-red-500'>Could not load map data. Please try refreshing the page.</p>";
-        });
+        }).catch(error => { console.error("Error loading map data:", error); mapContainer.innerHTML = "<p class='text-red-500'>Could not load map data. Please try refreshing the page.</p>"; });
+        function redrawCurrentMap() { if (currentMap === 'world') drawWorldMap(); else if (currentMap === 'europe') drawEuropeMap(); else if (currentMap === 'usa') drawUsaMap(); else if (currentMap === 'india') drawIndiaMap(); updateButtonStates(); }
+        function updateButtonStates() { document.querySelectorAll('.map-control-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(`show-${currentMap}`).classList.add('active'); const visitedBtn = document.getElementById('show-visited-cities'); const livedBtn = document.getElementById('show-lived-cities'); visitedBtn.classList.toggle('active', cityFilter === 'visited'); livedBtn.classList.toggle('active', cityFilter === 'lived'); }
+        function getMapColors() { return { visited: '#FF2800', default: '#d1d5db', hover: '#9ca3af', visitedHover: '#E52500', city: '#3b82f6', cityHover: '#1d4ed8', milestone: '#8b5cf6', milestoneHover: '#6d28d9' }; }
+        function drawCitiesLayer(projection) { if (cityFilter === 'none') return; const data = cityFilter === 'lived' ? citiesLived : allVisitedCities; const colors = getMapColors(); if (cityFilter === 'lived') { mapSvg.append("g").selectAll("path.milestone-icon").data(data).enter().append("path").attr("class", "milestone-icon").attr("d", "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z").attr("transform", d => { const [x, y] = projection(d.coordinates) || [null, null]; if (x === null) return 'scale(0)'; const scale = currentMap === 'world' ? 0.8 : 1.2; const anchorX = 12; const anchorY = 22; return `translate(${x - (anchorX * scale)}, ${y - (anchorY * scale)}) scale(${scale})`; }).style("fill", colors.milestone).on("mouseover", function(event, d) { showTooltip(event, d.name); d3.select(this).style("fill", colors.milestoneHover); }).on("mouseout", function(event, d) { hideTooltip(); d3.select(this).style("fill", colors.milestone); }); } else { const radius = currentMap === 'world' ? 3.5 : (currentMap === 'europe' ? 4 : 5); mapSvg.append("g").selectAll("circle.city-dot").data(data).enter().append("circle").attr("class", "city-dot").attr("cx", d => (projection(d.coordinates) || [null])[0]).attr("cy", d => (projection(d.coordinates) || [null, null])[1]).attr("r", d => projection(d.coordinates) ? radius : 0).style("fill", colors.city).on("mouseover", function(event, d) { showTooltip(event, d.name); d3.select(this).style("fill", colors.cityHover).attr("r", radius + 1.5); }).on("mouseout", function(event, d) { hideTooltip(); d3.select(this).style("fill", colors.city).attr("r", radius); }); } }
+        function drawBaseMap(features, path, visitedSet, nameProperty) { const colors = getMapColors(); mapSvg.selectAll("path.country, path.state, path.india-state").remove(); mapSvg.insert("g", ".milestone-icon, .city-dot").selectAll("path").data(features).enter().append("path").attr("d", path).attr("class", d => d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon' ? (currentMap === 'world' || currentMap === 'europe' ? 'country' : (currentMap === 'usa' ? 'state' : 'india-state')) : '').attr("fill", d => visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default).on("mouseover", function(event, d) { showTooltip(event, d.properties[nameProperty]); d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visitedHover : colors.hover); }).on("mouseout", function(event, d) { hideTooltip(); d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default); }); }
+        function drawWorldMap() { const { worldData } = mapDataCache; if (!worldData) return; mapSvg.selectAll("*").remove(); const projection = d3.geoMercator().scale(150).center([0, 40]).translate([480, 300]); const path = d3.geoPath().projection(projection); const countries = topojson.feature(worldData, worldData.objects.countries); drawBaseMap(countries.features, path, visitedCountries, 'name'); drawCitiesLayer(projection); }
+        function drawEuropeMap() { const { worldData } = mapDataCache; if (!worldData) return; mapSvg.selectAll("*").remove(); const projection = d3.geoMercator().center([20, 52]).scale(550).translate([480, 300]); const path = d3.geoPath().projection(projection); const countries = topojson.feature(worldData, worldData.objects.countries); drawBaseMap(countries.features, path, visitedCountries, 'name'); drawCitiesLayer(projection); }
+        function drawUsaMap() { const { usData } = mapDataCache; if (!usData) return; mapSvg.selectAll("*").remove(); const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1200); const path = d3.geoPath().projection(projection); const states = topojson.feature(usData, usData.objects.states); drawBaseMap(states.features, path, visitedStates, 'name'); drawCitiesLayer(projection); }
+        function drawIndiaMap() { const { indiaData } = mapDataCache; if (!indiaData) return; mapSvg.selectAll("*").remove(); const projection = d3.geoMercator().center([82.8, 23.5]).scale(1000).translate([480, 300]); const path = d3.geoPath().projection(projection); const states = topojson.feature(indiaData, indiaData.objects.states); drawBaseMap(states.features, path, visitedIndianStates, 'st_nm'); drawCitiesLayer(projection); }
+        function showTooltip(event, name) { mapTooltip.transition().duration(200).style("opacity", .9); mapTooltip.html(name).style("left", (event.pageX + 10) + "px").style("top", (event.pageY - 28) + "px"); }
+        function hideTooltip() { mapTooltip.transition().duration(500).style("opacity", 0); }
 
-        function redrawCurrentMap() {
-            if (currentMap === 'world') drawWorldMap();
-            else if (currentMap === 'europe') drawEuropeMap();
-            else if (currentMap === 'usa') drawUsaMap();
-            else if (currentMap === 'india') drawIndiaMap();
-            
-            updateButtonStates();
+        // --- Shooting Star Animation Script ---
+        const canvas = document.getElementById('shooting-stars-canvas');
+        const ctx = canvas.getContext('2d');
+        const mainDiv = canvas.parentElement;
+
+        function resizeCanvas() {
+            canvas.width = mainDiv.offsetWidth;
+            canvas.height = mainDiv.offsetHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        function updateButtonStates() {
-            document.querySelectorAll('.map-control-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`show-${currentMap}`).classList.add('active');
-
-            const visitedBtn = document.getElementById('show-visited-cities');
-            const livedBtn = document.getElementById('show-lived-cities');
-            
-            visitedBtn.classList.toggle('active', cityFilter === 'visited');
-            livedBtn.classList.toggle('active', cityFilter === 'lived');
-        }
-
-        function getMapColors() {
-            return {
-                visited: '#FF2800', default: '#d1d5db', hover: '#9ca3af',
-                visitedHover: '#E52500', city: '#3b82f6', cityHover: '#1d4ed8',
-                milestone: '#8b5cf6', milestoneHover: '#6d28d9'
-            };
-        }
-
-        function drawCitiesLayer(projection) {
-            if (cityFilter === 'none') return;
-
-            const data = cityFilter === 'lived' ? citiesLived : allVisitedCities;
-            const colors = getMapColors();
-
-            if (cityFilter === 'lived') {
-                svg.append("g").selectAll("path.milestone-icon")
-                    .data(data).enter().append("path")
-                    .attr("class", "milestone-icon")
-                    .attr("d", "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z")
-                    .attr("transform", d => {
-                        const [x, y] = projection(d.coordinates) || [null, null];
-                        if (x === null) return 'scale(0)';
-                        const scale = currentMap === 'world' ? 0.8 : 1.2;
-                        // Corrected logic to anchor the pin's tip to the coordinate
-                        const anchorX = 12; // The horizontal center of the 24px icon
-                        const anchorY = 22; // The vertical tip of the 24px icon
-                        return `translate(${x - (anchorX * scale)}, ${y - (anchorY * scale)}) scale(${scale})`;
-                    })
-                    .style("fill", colors.milestone)
-                    .on("mouseover", function(event, d) {
-                        showTooltip(event, d.name);
-                        d3.select(this).style("fill", colors.milestoneHover);
-                    })
-                    .on("mouseout", function(event, d) {
-                        hideTooltip();
-                        d3.select(this).style("fill", colors.milestone);
-                    });
-            } else { // 'visited'
-                const radius = currentMap === 'world' ? 3.5 : (currentMap === 'europe' ? 4 : 5);
-                svg.append("g").selectAll("circle.city-dot")
-                    .data(data).enter().append("circle")
-                    .attr("class", "city-dot")
-                    .attr("cx", d => (projection(d.coordinates) || [null])[0])
-                    .attr("cy", d => (projection(d.coordinates) || [null, null])[1])
-                    .attr("r", d => projection(d.coordinates) ? radius : 0)
-                    .style("fill", colors.city)
-                    .on("mouseover", function(event, d) {
-                        showTooltip(event, d.name);
-                        d3.select(this).style("fill", colors.cityHover).attr("r", radius + 1.5);
-                    })
-                    .on("mouseout", function(event, d) {
-                        hideTooltip();
-                        d3.select(this).style("fill", colors.city).attr("r", radius);
-                    });
+        class Star {
+            constructor(x, y, radius, color, velocity) {
+                this.x = x; this.y = y; this.radius = radius;
+                this.color = color; this.velocity = velocity;
             }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+            update() { this.draw(); this.x += this.velocity.x; this.y += this.velocity.y; }
         }
 
-        function drawBaseMap(features, path, visitedSet, nameProperty) {
-            const colors = getMapColors();
-            svg.selectAll("path.country, path.state, path.india-state").remove();
+        let stars = [];
 
-            svg.insert("g", ".milestone-icon, .city-dot")
-               .selectAll("path")
-               .data(features)
-               .enter().append("path")
-               .attr("d", path)
-               .attr("class", d => d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon' ? (currentMap === 'world' || currentMap === 'europe' ? 'country' : (currentMap === 'usa' ? 'state' : 'india-state')) : '')
-               .attr("fill", d => visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default)
-               .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties[nameProperty]);
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default);
-                });
-        }
-        
-        function drawWorldMap() {
-            const { worldData } = mapDataCache; if (!worldData) return;
-            svg.selectAll("*").remove();
-            const projection = d3.geoMercator().scale(150).center([0, 40]).translate([480, 300]);
-            const path = d3.geoPath().projection(projection);
-            const countries = topojson.feature(worldData, worldData.objects.countries);
-            drawBaseMap(countries.features, path, visitedCountries, 'name');
-            drawCitiesLayer(projection);
-        }
-        
-        function drawEuropeMap() {
-            const { worldData } = mapDataCache; if (!worldData) return;
-            svg.selectAll("*").remove();
-            const projection = d3.geoMercator().center([20, 52]).scale(550).translate([480, 300]);
-            const path = d3.geoPath().projection(projection);
-            const countries = topojson.feature(worldData, worldData.objects.countries);
-            drawBaseMap(countries.features, path, visitedCountries, 'name');
-            drawCitiesLayer(projection);
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(249, 250, 251, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (Math.random() < 0.04) {
+                const radius = Math.random() * 2 + 1;
+                const fromLeft = Math.random() < 0.5;
+                const x = fromLeft ? Math.random() * canvas.width * 0.5 : canvas.width - Math.random() * canvas.width * 0.5;
+                const y = -radius;
+                const color = `hsl(${Math.random() * 360}, 100%, 80%)`;
+                const angle = fromLeft ? Math.PI * 0.35 : Math.PI * 0.65;
+                const speed = Math.random() * 2 + 1; // Slower speed
+                const velocity = { x: Math.cos(angle) * speed * (fromLeft ? 1 : -1), y: Math.sin(angle) * speed };
+                stars.push(new Star(x, y, radius, color, velocity));
+            }
+
+            stars.forEach((star, index) => {
+                star.update();
+                if (star.x + star.radius < 0 || star.x - star.radius > canvas.width || star.y - star.radius > canvas.height) {
+                    stars.splice(index, 1);
+                }
+            });
         }
 
-        function drawUsaMap() {
-            const { usData } = mapDataCache; if (!usData) return;
-            svg.selectAll("*").remove();
-            const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1200);
-            const path = d3.geoPath().projection(projection);
-            const states = topojson.feature(usData, usData.objects.states);
-            drawBaseMap(states.features, path, visitedStates, 'name');
-            drawCitiesLayer(projection);
-        }
-            
-        function drawIndiaMap() {
-            const { indiaData } = mapDataCache; if (!indiaData) return;
-            svg.selectAll("*").remove();
-            const projection = d3.geoMercator().center([82.8, 23.5]).scale(1000).translate([480, 300]);
-            const path = d3.geoPath().projection(projection);
-            const states = topojson.feature(indiaData, indiaData.objects.states);
-            drawBaseMap(states.features, path, visitedIndianStates, 'st_nm');
-            drawCitiesLayer(projection);
-        }
-
-        function showTooltip(event, name) {
-            tooltip.transition().duration(200).style("opacity", .9);
-            tooltip.html(name)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
-        }
-
-        function hideTooltip() {
-            tooltip.transition().duration(500).style("opacity", 0);
-        }
+        animate();
     </script>
     
     <footer class="w-full text-center py-8 bg-white">
