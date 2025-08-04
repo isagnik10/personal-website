@@ -46,6 +46,7 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
+            z-index: 999; /* Ensure tooltip is on top */
         }
         .map-control-btn.active {
             background-color: #FF2800;
@@ -183,7 +184,7 @@
     <section id="travels" class="relative z-10 min-h-screen w-full py-20 px-4 md:px-8">
         <div class="max-w-6xl mx-auto text-center flex flex-col items-center p-4 sm:p-8 rounded-xl" style="background-color: rgba(255, 255, 255, 0.9);">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Travels</h2>
-            <p class="text-base md:text-lg text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
+            <p class="text-base md:text-lg text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover or click to see the name.</p>
             
             <div id="map-controls" class="flex justify-center gap-2 sm:gap-4 mb-4 flex-wrap">
                 <button id="show-world" class="map-control-btn px-4 py-2 bg-gray-200 rounded-md">World</button>
@@ -211,7 +212,6 @@
             </div>
 
             <div id="map-container" class="w-full" style="max-width: 960px;"></div>
-            <div id="tooltip"></div>
         </div>
     </section>
     
@@ -244,6 +244,8 @@
             </p>
         </div>
     </footer>
+
+    <div id="tooltip"></div>
     
     <!-- D3 and TopoJSON scripts -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -340,6 +342,8 @@
         ]).then(([worldData, usData, indiaData]) => {
             mapDataCache = { worldData, usData, indiaData };
             
+            svg.on('click', hideTooltip);
+
             document.getElementById('show-world').addEventListener('click', () => { currentMap = 'world'; redrawCurrentMap(); });
             document.getElementById('show-europe').addEventListener('click', () => { currentMap = 'europe'; redrawCurrentMap(); });
             document.getElementById('show-usa').addEventListener('click', () => { currentMap = 'usa'; redrawCurrentMap(); });
@@ -394,6 +398,23 @@
 
             const data = cityFilter === 'lived' ? citiesLived : allVisitedCities;
             const colors = getMapColors();
+            
+            const handleMouseOver = (event, d, isMilestone) => {
+                showTooltip(event, d.name);
+                const hoverColor = isMilestone ? colors.milestoneHover : colors.cityHover;
+                d3.select(event.currentTarget).style("fill", hoverColor);
+            };
+
+            const handleMouseOut = (event, d, isMilestone) => {
+                hideTooltip();
+                const defaultColor = isMilestone ? colors.milestone : colors.city;
+                d3.select(event.currentTarget).style("fill", defaultColor);
+            };
+            
+            const handleClick = (event, d) => {
+                event.stopPropagation();
+                showTooltip(event, d.name);
+            };
 
             if (cityFilter === 'lived') {
                 svg.append("g").selectAll("path.milestone-icon")
@@ -409,14 +430,9 @@
                         return `translate(${x - (anchorX * scale)}, ${y - (anchorY * scale)}) scale(${scale})`;
                     })
                     .style("fill", colors.milestone)
-                    .on("mouseover", function(event, d) {
-                        showTooltip(event, d.name);
-                        d3.select(this).style("fill", colors.milestoneHover);
-                    })
-                    .on("mouseout", function(event, d) {
-                        hideTooltip();
-                        d3.select(this).style("fill", colors.milestone);
-                    });
+                    .on("mouseover", (e, d) => handleMouseOver(e, d, true))
+                    .on("mouseout", (e, d) => handleMouseOut(e, d, true))
+                    .on("click", handleClick);
             } else { 
                 const radius = currentMap === 'world' ? 3.5 : (currentMap === 'europe' ? 4 : 5);
                 svg.append("g").selectAll("circle.city-dot")
@@ -426,20 +442,32 @@
                     .attr("cy", d => (projection(d.coordinates) || [null, null])[1])
                     .attr("r", d => projection(d.coordinates) ? radius : 0)
                     .style("fill", colors.city)
-                    .on("mouseover", function(event, d) {
-                        showTooltip(event, d.name);
-                        d3.select(this).style("fill", colors.cityHover).attr("r", radius + 1.5);
-                    })
-                    .on("mouseout", function(event, d) {
-                        hideTooltip();
-                        d3.select(this).style("fill", colors.city).attr("r", radius);
-                    });
+                    .on("mouseover", (e, d) => handleMouseOver(e, d, false))
+                    .on("mouseout", (e, d) => handleMouseOut(e, d, false))
+                    .on("click", handleClick);
             }
         }
 
         function drawBaseMap(features, path, visitedSet, nameProperty) {
             const colors = getMapColors();
             svg.selectAll("path.country, path.state, path.india-state").remove();
+            
+            const handleMouseOver = (event, d) => {
+                 showTooltip(event, d.properties[nameProperty]);
+                 const hoverColor = visitedSet.has(d.properties[nameProperty]) ? colors.visitedHover : colors.hover;
+                 d3.select(event.currentTarget).attr("fill", hoverColor);
+            };
+
+            const handleMouseOut = (event, d) => {
+                hideTooltip();
+                const defaultColor = visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default;
+                d3.select(event.currentTarget).attr("fill", defaultColor);
+            };
+
+            const handleClick = (event, d) => {
+                event.stopPropagation();
+                showTooltip(event, d.properties[nameProperty]);
+            };
 
             svg.insert("g", ".milestone-icon, .city-dot")
                .selectAll("path")
@@ -448,14 +476,9 @@
                .attr("d", path)
                .attr("class", d => d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon' ? (currentMap === 'world' || currentMap === 'europe' ? 'country' : (currentMap === 'usa' ? 'state' : 'india-state')) : '')
                .attr("fill", d => visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default)
-               .on("mouseover", function(event, d) {
-                    showTooltip(event, d.properties[nameProperty]);
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visitedHover : colors.hover);
-                })
-                .on("mouseout", function(event, d) {
-                    hideTooltip();
-                    d3.select(this).attr("fill", visitedSet.has(d.properties[nameProperty]) ? colors.visited : colors.default);
-                });
+               .on("mouseover", handleMouseOver)
+               .on("mouseout", handleMouseOut)
+               .on("click", handleClick);
         }
         
         function drawWorldMap() {
