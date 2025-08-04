@@ -47,13 +47,30 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-        .map-control-btn.active, .city-filter-btn.active {
+        .map-control-btn.active {
             background-color: #FF2800;
+            color: white;
+            font-weight: bold;
+        }
+        #show-visited-cities.active {
+            background-color: #3b82f6; /* Blue to match markers */
+            color: white;
+            font-weight: bold;
+        }
+        #show-lived-cities.active {
+            background-color: #8b5cf6; /* Purple to match markers */
             color: white;
             font-weight: bold;
         }
         .map-control-btn, .city-filter-btn {
              transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Dropdown open state */
+        .dropdown-content.open {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
         }
 
         /* Rotating Text Animation */
@@ -103,12 +120,12 @@
     <!-- Navigation -->
     <div class="absolute top-4 right-4 sm:top-6 sm:right-8 md:right-16 z-20 flex items-center gap-4 md:gap-8">
         <!-- Projects Dropdown -->
-        <div class="relative group pb-4">
-            <button type="button" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none" aria-haspopup="true" aria-expanded="false">
+        <div class="relative group">
+            <button id="projects-btn" type="button" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none" aria-haspopup="true" aria-expanded="false">
                 Projects
-                <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full group-focus-within:w-full"></span>
+                <span class="absolute bottom-[-8px] left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full group-focus-within:w-full"></span>
             </button>
-            <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 scale-95 transform transition-all duration-200 ease-in-out pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+            <div id="projects-dropdown" class="dropdown-content origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 scale-95 transform transition-all duration-200 ease-in-out pointer-events-none">
                 <div class="py-1" role="menu" aria-orientation="vertical">
                     <a href="https://pokertracker-dea19.web.app/" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center" role="menuitem">PokerTracker</a>
                     <a href="https://github.com/isagnik10/personal-website/" target="_blank" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-center" role="menuitem">Personal website</a>
@@ -116,9 +133,9 @@
             </div>
         </div>
         <!-- Contact Link -->
-        <a href="#contact" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none relative group pb-4">
+        <a href="#contact" class="text-base md:text-lg font-medium text-gray-800 focus:outline-none relative group">
             Contact
-            <span class="absolute bottom-4 left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full"></span>
+            <span class="absolute bottom-[-8px] left-0 w-0 h-0.5 bg-[#FF2800] transition-all duration-300 group-hover:w-full"></span>
         </a>
     </div>
 
@@ -164,8 +181,8 @@
     </div>
 
     <!-- Travels Section -->
-    <section id="travels" class="relative z-10 min-h-screen bg-white w-full py-20 px-4 md:px-8">
-        <div class="max-w-6xl mx-auto text-center flex flex-col items-center">
+    <section id="travels" class="relative z-10 min-h-screen w-full py-20 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto text-center flex flex-col items-center p-4 sm:p-8 rounded-xl" style="background-color: rgba(255, 255, 255, 0.9);">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Travels</h2>
             <p class="text-base md:text-lg text-gray-600 mb-6 max-w-2xl">A map of places I've been fortunate enough to visit. Hover over a country/state to see its name.</p>
             
@@ -200,8 +217,8 @@
     </section>
     
     <!-- Contact Section -->
-    <section id="contact" class="relative z-10 w-full py-20 bg-gray-50">
-        <div class="max-w-6xl mx-auto text-center">
+    <section id="contact" class="relative z-10 w-full py-20">
+         <div class="max-w-xl mx-auto text-center p-4 sm:p-8 rounded-xl" style="background-color: rgba(249, 250, 251, 0.9);">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact</h2>
             <p class="text-base md:text-lg text-gray-600 mb-4">Feel free to reach out!</p>
             <p class="text-base md:text-lg text-gray-600 group inline-flex items-center gap-2">
@@ -216,12 +233,41 @@
         </div>
     </section>
 
-
+    <!-- Footer -->
+     <footer class="relative z-10 w-full text-center py-8">
+        <div class="inline-block p-4 rounded-xl" style="background-color: rgba(255, 255, 255, 0.9);">
+            <p class="text-gray-500 transition-colors duration-300 group relative inline-block hover:text-gray-800">
+                Designed and built by 
+                <a href="https://www.linkedin.com/in/sagnik10/" target="_blank" rel="noopener noreferrer" class="font-bold relative">
+                    Sagnik
+                    <span class="absolute bottom-[-2px] left-0 w-full h-0.5 bg-[#FF2800] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+                </a>
+            </p>
+        </div>
+    </footer>
+    
     <!-- D3 and TopoJSON scripts -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://d3js.org/topojson.v3.min.js"></script>
 
     <script>
+        // -- Dropdown Logic --
+        const projectsBtn = document.getElementById('projects-btn');
+        const projectsDropdown = document.getElementById('projects-dropdown');
+
+        projectsBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            projectsDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            if (projectsDropdown.classList.contains('open')) {
+                projectsDropdown.classList.remove('open');
+            }
+        });
+
+
+        // -- Map Logic --
         let currentMap = 'world';
         let cityFilter = 'none'; // 'visited', 'lived', 'none'
         let mapDataCache = {};
@@ -494,7 +540,7 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            ctx.fillStyle = 'rgba(249, 250, 251, 0.15)';
+            ctx.fillStyle = 'rgba(249, 250, 251, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (Math.random() < 0.04) {
@@ -520,17 +566,5 @@
         animate();
     </script>
     
-    <footer class="relative z-10 w-full text-center py-8 bg-white">
-        <p class="text-gray-500 transition-colors duration-300 group relative inline-block hover:text-gray-800">
-            Designed and built by 
-            <a href="https://www.linkedin.com/in/sagnik10/" target="_blank" rel="noopener noreferrer" class="font-bold relative">
-                Sagnik
-                <span class="absolute bottom-[-2px] left-0 w-full h-0.5 bg-[#FF2800] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-        </p>
-    </footer>
 </body>
 </html>
-
-
-
